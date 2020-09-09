@@ -1,3 +1,5 @@
+
+Object.defineProperty(exports, '__esModule', { value: true });
 const VARIABLE = /(SELECT\s+)(\?\S+)/;
 const QUERY_TAIL = /\}[^}]*$/;
 
@@ -12,35 +14,33 @@ const QUERY_TAIL = /\}[^}]*$/;
  * Creates:
  * - a resultsCache property on the path data
  */
-export default class PreloadHandler {
+class PreloadHandler {
   /**
-   * Creates a preload function.
-   */
+     * Creates a preload function.
+     */
   handle(pathData, pathProxy) {
     return async (...properties) => {
       if (properties.length > 0) {
         // Map the properties to predicates
-        const predicates = await Promise.all(properties.map(async p =>
-          (await pathProxy[p].predicate).value));
-
+        const predicates = await Promise.all(properties.map(async p => (await pathProxy[p].predicate).value));
         // Create and attach the results cache to the path data
         pathData.resultsCache =
-          await this.createResultsCache(predicates, pathData, pathProxy);
+                    await this.createResultsCache(predicates, pathData, pathProxy);
       }
       return pathProxy;
     };
   }
 
+
   /**
-   * Creates a cache for the results of
-   * resolving the given predicates against the path.
-   */
+     * Creates a cache for the results of
+     * resolving the given predicates against the path.
+     */
   async createResultsCache(predicates, pathData, path) {
     // Execute the preloading query
     const { query, vars, resultVar } = await this.createQuery(predicates, path);
     const { settings: { queryEngine } } = pathData;
     const bindings = queryEngine.execute(query);
-
     // Extract all results and their preloaded property values
     const resultsCache = {};
     const propertyCaches = {};
@@ -56,7 +56,6 @@ export default class PreloadHandler {
         const resultData = { subject: result, propertyCache };
         resultsCache[hash] = pathData.extendPath(resultData, null);
       }
-
       // Create and cache a possible property value path from the binding
       const propertyCache = propertyCaches[hash];
       for (let i = 0; i < vars.length; i++) {
@@ -70,9 +69,10 @@ export default class PreloadHandler {
     return Object.values(resultsCache);
   }
 
+
   /**
-   * Creates the query for preloading the given predicates on the path
-   */
+     * Creates the query for preloading the given predicates on the path
+     */
   async createQuery(predicates, path) {
     // Obtain the query for the current path, and its main variable
     const parentQuery = await path.sparql;
@@ -80,13 +80,11 @@ export default class PreloadHandler {
     if (!variableMatch)
       throw new Error(`Unexpected path query: ${parentQuery}`);
     const resultVar = variableMatch[2];
-
     // Modify the query to include the preload clauses
     // TODO: instead of query manipulation, adjust the query generator
     // TODO: support reverse predicates
     const vars = predicates.map((p, i) => `?preload_${i}`);
-    const preloadClauses = predicates.map((predicate, i) =>
-      `    { ${resultVar} <${predicate}> ${vars[i]}. }`)
+    const preloadClauses = predicates.map((predicate, i) => `    { ${resultVar} <${predicate}> ${vars[i]}. }`)
       .join('\n    UNION\n');
     const query = parentQuery
       .replace(VARIABLE, `$1$2 ${vars.join(' ')}`)
@@ -94,7 +92,7 @@ export default class PreloadHandler {
     return { query, vars, resultVar };
   }
 }
-
+exports.default = PreloadHandler;
 // Returns a unique string representation of the term
 function hashTerm(term) {
   const { termType, value } = term;

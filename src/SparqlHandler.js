@@ -1,11 +1,10 @@
-import { namedNode } from '@rdfjs/data-model';
 
-const NEEDS_ESCAPE = /["\\\t\n\r\b\f\u0000-\u0019\ud800-\udbff]/,
-      ESCAPE_ALL = /["\\\t\n\r\b\f\u0000-\u0019]|[\ud800-\udbff][\udc00-\udfff]/g,
-      ESCAPED_CHARS = {
-        '\\': '\\\\', '"': '\\"', '\t': '\\t',
-        '\n': '\\n', '\r': '\\r', '\b': '\\b', '\f': '\\f',
-      };
+Object.defineProperty(exports, '__esModule', { value: true });
+const data_model_1 = require('@rdfjs/data-model');
+const NEEDS_ESCAPE = /["\\\t\n\r\b\f\u0000-\u0019\ud800-\udbff]/, ESCAPE_ALL = /["\\\t\n\r\b\f\u0000-\u0019]|[\ud800-\udbff][\udc00-\udfff]/g, ESCAPED_CHARS = {
+  '\\': '\\\\', '"': '\\"', '\t': '\\t',
+  '\n': '\\n', '\r': '\\r', '\b': '\\b', '\f': '\\f',
+};
 
 /**
  * Expresses a path or mutation as a SPARQL query.
@@ -13,14 +12,13 @@ const NEEDS_ESCAPE = /["\\\t\n\r\b\f\u0000-\u0019\ud800-\udbff]/,
  * Requires:
  * - a mutationExpressions or pathExpression property on the path proxy
  */
-export default class SparqlHandler {
+class SparqlHandler {
   async handle(pathData, path) {
     // First check if we have a mutation expression
     const mutationExpressions = await path.mutationExpressions;
     if (Array.isArray(mutationExpressions) && mutationExpressions.length)
-      // Remove empty results to prevent dangling semicolons
+    // Remove empty results to prevent dangling semicolons
       return mutationExpressions.map(e => this.mutationExpressionToQuery(e)).filter(Boolean).join('\n;\n');
-
     // Otherwise, fall back to checking for a path expression
     const pathExpression = await path.pathExpression;
     if (!Array.isArray(pathExpression))
@@ -31,7 +29,6 @@ export default class SparqlHandler {
   pathExpressionToQuery(pathData, path, pathExpression) {
     if (pathExpression.length < 2 && !pathData.finalClause)
       throw new Error(`${pathData} should at least contain a subject and a predicate`);
-
     // Create triple patterns
     let queryVar = '?subject', sorts = [], clauses = [];
     if (pathExpression.length > 1) {
@@ -40,7 +37,6 @@ export default class SparqlHandler {
     }
     if (pathData.finalClause)
       clauses.push(pathData.finalClause(queryVar));
-
     // Create SPARQL query body
     const distinct = pathData.distinct ? 'DISTINCT ' : '';
     const select = `SELECT ${distinct}${pathData.select ? pathData.select : queryVar}`;
@@ -54,7 +50,6 @@ export default class SparqlHandler {
     // If there are no mutations, there is no query
     if (!mutationType || !conditions || predicateObjects && predicateObjects.length === 0)
       return '';
-
     // Create the WHERE clauses
     const scope = {};
     let subject, where;
@@ -68,9 +63,8 @@ export default class SparqlHandler {
       const lastPredicate = conditions[conditions.length - 1].predicate;
       subject = this.createVar(lastPredicate.value, scope);
       ({ queryVar: subject, clauses: where } =
-        this.expressionToTriplePatterns(conditions, subject, scope));
+                this.expressionToTriplePatterns(conditions, subject, scope));
     }
-
     // Create the mutation clauses
     const mutations = [];
     for (const { predicate, reverse, objects } of predicateObjects) {
@@ -82,12 +76,11 @@ export default class SparqlHandler {
       mutations.push(...this.triplePatterns(subject, predicate, objectStrings, reverse));
     }
     const mutationClauses = `{\n  ${mutations.join('\n  ')}\n}`;
-
     // Join clauses into a SPARQL query
     return where.length === 0 ?
-      // If there are no WHERE clauses, just mutate raw data
+    // If there are no WHERE clauses, just mutate raw data
       `${mutationType} DATA ${mutationClauses}` :
-      // Otherwise, return a DELETE/INSERT ... WHERE ... query
+    // Otherwise, return a DELETE/INSERT ... WHERE ... query
       `${mutationType} ${mutationClauses} WHERE {\n  ${where.join('\n  ')}\n}`;
   }
 
@@ -102,7 +95,6 @@ export default class SparqlHandler {
       // Obtain components and generate triple pattern
       const subject = object;
       const { predicate, reverse, sort, values } = segment;
-
       // Use fixed object values values if they were specified
       let objects;
       if (values && values.length > 0) {
@@ -118,7 +110,6 @@ export default class SparqlHandler {
         allowValues = true;
       }
       clauses.push(...this.triplePatterns(subject, predicate, objects, reverse));
-
       // If the sort option was not set, use this object as a query variable
       if (!sort) {
         queryVar = object;
@@ -153,14 +144,11 @@ export default class SparqlHandler {
     let { value } = term;
     if (NEEDS_ESCAPE.test(value))
       value = value.replace(ESCAPE_ALL, escapeCharacter);
-
     switch (term.termType) {
     case 'NamedNode':
       return `<${value}>`;
-
     case 'BlankNode':
       return `_:${value}`;
-
     case 'Literal':
       // Determine optional language or datatype
       let suffix = '';
@@ -169,7 +157,6 @@ export default class SparqlHandler {
       else if (term.datatype.value !== 'http://www.w3.org/2001/XMLSchema#string')
         suffix = `^^<${term.datatype.value}>`;
       return `"${value}"${suffix}`;
-
     default:
       throw new Error(`Could not convert a term of type ${term.termType}`);
     }
@@ -184,7 +171,7 @@ export default class SparqlHandler {
     return subjectStrings.map(s => `${s} <${predicateTerm.value}> ${objects}.`);
   }
 }
-
+exports.default = SparqlHandler;
 // Replaces a character by its escaped version
 // (borrowed from https://www.npmjs.com/package/n3)
 function escapeCharacter(character) {
@@ -199,19 +186,18 @@ function escapeCharacter(character) {
     // Replace a surrogate pair with its 8-bit unicode escape sequence
     else {
       result = ((character.charCodeAt(0) - 0xD800) * 0x400 +
-                 character.charCodeAt(1) + 0x2400).toString(16);
+                character.charCodeAt(1) + 0x2400).toString(16);
       result = '\\U00000000'.substr(0, 10 - result.length) + result;
     }
   }
   return result;
 }
-
 // Skolemizes the given term if it is a blank node
 let skolemId = 0;
 function skolemize(term) {
   if (term.termType !== 'BlankNode')
     return term;
   if (!term.skolemized)
-    term.skolemized = namedNode(`urn:ldflex:sk${skolemId++}`);
+    term.skolemized = data_model_1.namedNode(`urn:ldflex:sk${skolemId++}`);
   return term.skolemized;
 }

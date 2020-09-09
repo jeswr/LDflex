@@ -1,7 +1,10 @@
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
 /**
  * Queries for all predicates of a path subject
  */
-export default class PredicatesHandler {
+class PredicatesHandler {
   handle(pathData) {
     return pathData.extendPath({
       distinct: true,
@@ -11,3 +14,4 @@ export default class PredicatesHandler {
     });
   }
 }
+exports.default = PredicatesHandler;

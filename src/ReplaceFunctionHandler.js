@@ -1,3 +1,6 @@
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
 /**
  * Returns a function that deletes the given value
  * for the path, and then adds the given values to the path.
@@ -6,7 +9,7 @@
  * - a delete function on the path proxy.
  * - an add function on the path proxy.
  */
-export default class ReplaceFunctionHandler {
+class ReplaceFunctionHandler {
   handle(pathData, path) {
     return function (oldValue, ...newValues) {
       if (!oldValue || !newValues.length)
@@ -15,3 +18,4 @@ export default class ReplaceFunctionHandler {
     };
   }
 }
+exports.default = ReplaceFunctionHandler;

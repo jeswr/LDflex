@@ -1,27 +1,32 @@
+
+Object.defineProperty(exports, '__esModule', { value: true });
+exports.iteratorFor = exports.getFirstItem = exports.iterableToArray = void 0;
 const done = {};
 
 /**
  * Returns the elements of the iterable as an array
  */
-export async function iterableToArray(iterable) {
+async function iterableToArray(iterable) {
   const items = [];
   for await (const item of iterable)
     items.push(item);
   return items;
 }
+exports.iterableToArray = iterableToArray;
 
 /**
  * Gets the first element of the iterable.
  */
-export function getFirstItem(iterable) {
+function getFirstItem(iterable) {
   const iterator = iterable[Symbol.asyncIterator]();
   return iterator.next().then(item => item.value);
 }
+exports.getFirstItem = getFirstItem;
 
 /**
  * Creates an async iterator with the item as only element.
  */
-export function iteratorFor(item) {
+function iteratorFor(item) {
   return {
     async next() {
       if (item !== done) {
@@ -33,3 +38,4 @@ export function iteratorFor(item) {
     },
   };
 }
+exports.iteratorFor = iteratorFor;

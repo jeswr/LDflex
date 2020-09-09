@@ -1,36 +1,39 @@
-import { getFirstItem } from './iterableUtils';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+exports.memoizeIterable = exports.toIterablePromise = exports.getThen = exports.lazyThenable = void 0;
+const iterableUtils_1 = require('./iterableUtils');
 
 /**
  * Returns a lazy thenable to the created promise.
  */
-export function lazyThenable(createPromise) {
+function lazyThenable(createPromise) {
   return { then: getThen(createPromise) };
 }
+exports.lazyThenable = lazyThenable;
 
 /**
  * Lazily returns the `then` function of the created promise.
  */
-export function getThen(createPromise) {
-  return (onResolved, onRejected) =>
-    createPromise().then(onResolved, onRejected);
+function getThen(createPromise) {
+  return (onResolved, onRejected) => createPromise().then(onResolved, onRejected);
 }
+exports.getThen = getThen;
 
 /**
  * Returns an iterable that is also a promise to the first element.
  */
-export function toIterablePromise(iterable) {
+function toIterablePromise(iterable) {
   // If called with a generator function,
   // memoize it to enable multiple iterations
   if (typeof iterable === 'function')
     iterable = memoizeIterable(iterable());
-
-  // Return an object that is iterable and a promise
+    // Return an object that is iterable and a promise
   return {
     [Symbol.asyncIterator]() {
       return iterable[Symbol.asyncIterator]();
     },
     get then() {
-      return getThen(() => getFirstItem(this));
+      return getThen(() => iterableUtils_1.getFirstItem(this));
     },
     catch(onRejected) {
       return this.then(null, onRejected);
@@ -40,15 +43,15 @@ export function toIterablePromise(iterable) {
     },
   };
 }
+exports.toIterablePromise = toIterablePromise;
 
 /**
  * Returns a memoized version of the iterable
  * that can be iterated over as many times as needed.
  */
-export function memoizeIterable(iterable) {
+function memoizeIterable(iterable) {
   const cache = [];
   let iterator = iterable[Symbol.asyncIterator]();
-
   return {
     [Symbol.asyncIterator]() {
       let i = 0;
@@ -57,11 +60,9 @@ export function memoizeIterable(iterable) {
           // Return the item if it has been read already
           if (i < cache.length)
             return cache[i++];
-
           // Stop if there are no more items
           if (!iterator)
             return { done: true };
-
           // Read and cache an item from the iterable otherwise
           const item = cache[i++] = iterator.next();
           if ((await item).done)
@@ -72,3 +73,4 @@ export function memoizeIterable(iterable) {
     },
   };
 }
+exports.memoizeIterable = memoizeIterable;

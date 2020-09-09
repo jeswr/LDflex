@@ -1,7 +1,10 @@
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
 /**
  * Queries for all subjects of a document
  */
-export default class SubjectsHandler {
+class SubjectsHandler {
   handle(pathData) {
     return pathData.extendPath({
       distinct: true,
@@ -11,3 +14,4 @@ export default class SubjectsHandler {
     });
   }
 }
+exports.default = SubjectsHandler;

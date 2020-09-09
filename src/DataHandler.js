@@ -1,3 +1,7 @@
+
+Object.defineProperty(exports, '__esModule', { value: true });
+const handlerFactory = settings => (...dataProperties) => new DataHandler(settings, ...dataProperties);
+
 /**
  * Resolves to the given item in the path data.
  * For example, new DataHandler({}, 'foo', 'bar')
@@ -6,29 +10,12 @@
  * Resolution can optionally be async,
  * and/or be behind a function call.
  */
-export default class DataHandler {
+class DataHandler {
   constructor(options, ...dataProperties) {
     this._isAsync = options.async;
-    this._isFunction = options.function;
+    this._isFunction = options.function ?? false;
     this._dataProperties = dataProperties;
   }
-
-  static sync(...dataProperties) {
-    return new DataHandler({ async: false }, ...dataProperties);
-  }
-
-  static syncFunction(...dataProperties) {
-    return new DataHandler({ async: false, function: true }, ...dataProperties);
-  }
-
-  static async(...dataProperties) {
-    return new DataHandler({ async: true }, ...dataProperties);
-  }
-
-  static asyncFunction(...dataProperties) {
-    return new DataHandler({ async: true, function: true }, ...dataProperties);
-  }
-
 
   // Resolves the data path, or returns a function that does so
   handle(pathData) {
@@ -39,9 +26,9 @@ export default class DataHandler {
 
   // Resolves the data path
   _resolveDataPath(data) {
-    return !this._isAsync ?
-      this._resolveSyncDataPath(data) :
-      this._resolveAsyncDataPath(data);
+    return this._isAsync ?
+      this._resolveAsyncDataPath(data) :
+      this._resolveSyncDataPath(data);
   }
 
   // Resolves synchronous property access
@@ -58,3 +45,8 @@ export default class DataHandler {
     return data;
   }
 }
+exports.default = DataHandler;
+DataHandler.sync = handlerFactory({ async: false });
+DataHandler.syncFunction = handlerFactory({ async: false, function: true });
+DataHandler.async = handlerFactory({ async: true });
+DataHandler.asyncFunction = handlerFactory({ async: true, function: true });

@@ -1,3 +1,5 @@
+
+Object.defineProperty(exports, '__esModule', { value: true });
 const EMPTY = Object.create(null);
 
 /**
@@ -21,20 +23,20 @@ const EMPTY = Object.create(null);
  * - apply, a function the will be invoked when the path is called as a function
  * - extendPath, a method to create a child path with this path as parent
  */
-export default class PathProxy {
+class PathProxy {
   constructor({ handlers = EMPTY, resolvers = [] } = {}) {
     this._handlers = handlers;
     this._resolvers = resolvers;
   }
 
+
   /**
-   * Creates a path Proxy with the given settings and internal data fields.
-   */
+     * Creates a path Proxy with the given settings and internal data fields.
+     */
   createPath(settings = {}, data) {
     // The settings parameter is optional
     if (data === undefined)
       [data, settings] = [settings, {}];
-
     // Create the path's internal data object and the proxy that wraps it
     const { apply, ...rawData } = data;
     const path = apply ? Object.assign(callPathFunction, rawData) : rawData;
@@ -44,7 +46,6 @@ export default class PathProxy {
     function callPathFunction(...args) {
       return apply(args, path, proxy);
     }
-
     // Add an extendPath method to create child paths
     if (!path.extendPath) {
       const pathProxy = this;
@@ -52,21 +53,20 @@ export default class PathProxy {
         return pathProxy.createPath(settings, { parent, extendPath, ...newData });
       };
     }
-
     // Return the proxied path
     return proxy;
   }
 
+
   /**
-   * Handles access to a property
-   */
+     * Handles access to a property
+     */
   get(pathData, property) {
     // Handlers provide functionality for a specific property,
     // so check if we find a handler first
     const handler = this._handlers[property];
     if (handler && typeof handler.handle === 'function')
       return handler.handle(pathData, pathData.proxy);
-
     // Resolvers provide functionality for arbitrary properties,
     // so find a resolver that can handle this property
     for (const resolver of this._resolvers) {
@@ -77,3 +77,4 @@ export default class PathProxy {
     return undefined;
   }
 }
+exports.default = PathProxy;

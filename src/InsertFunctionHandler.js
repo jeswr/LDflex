@@ -1,10 +1,17 @@
-import MutationFunctionHandler from './MutationFunctionHandler';
+
+const __importDefault = (this && this.__importDefault) || function (mod) {
+  return (mod && mod.__esModule) ? mod : { default: mod };
+};
+Object.defineProperty(exports, '__esModule', { value: true });
+const MutationFunctionHandler_1 = __importDefault(require('./MutationFunctionHandler'));
+const mutation_1 = require('../types/mutation');
 
 /**
  * A MutationFunctionHandler for insertions.
  */
-export default class InsertFunctionHandler extends MutationFunctionHandler {
+class InsertFunctionHandler extends MutationFunctionHandler_1.default {
   constructor() {
-    super('INSERT', false);
+    super(mutation_1.mutation.INSERT, false);
   }
 }
+exports.default = InsertFunctionHandler;

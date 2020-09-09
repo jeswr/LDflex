@@ -1,4 +1,6 @@
-import { isAsyncIterable } from './valueUtils';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+const valueUtils_1 = require('./valueUtils');
 
 /**
  * Converts an asynchronously iterable path into an array.
@@ -6,11 +8,13 @@ import { isAsyncIterable } from './valueUtils';
  * Requires:
  * - (optional) an iterable path
  */
-export default class ToArrayHandler {
+class ToArrayHandler {
   handle(pathData, path) {
+    // console.log('path', path)
+    // return async f => map(path, f ?? (async item => await item))
     return async map => {
       const items = [];
-      if (isAsyncIterable(path)) {
+      if (valueUtils_1.isAsyncIterable(path)) {
         // Ensure the mapping function is valid
         if (typeof map !== 'function')
           map = item => item;
@@ -23,3 +27,4 @@ export default class ToArrayHandler {
     };
   }
 }
+exports.default = ToArrayHandler;

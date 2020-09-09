@@ -22,13 +22,16 @@
   ],
   "dependencies": {
     "@rdfjs/data-model": "^1.1.2",
-    "jsonld-context-parser": "^2.0.0"
+    "async": "^3.2.0",
+    "jsonld-context-parser": "^2.0.0",
+    "typescript": "^4.0.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.6",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/preset-env": "^7.8.6",
+    "@types/async": "^3.2.3",
     "babel-eslint": "^10.1.0",
     "eslint": "^6.8.0",
     "eslint-plugin-jest": "^23.8.1",
@@ -40,9 +43,9 @@
     "build:lib": "babel src --out-dir lib",
     "build:module": "babel src --env-name module --out-dir module",
     "jest": "jest",
-    "lint": "eslint src test",
+    "lint": "eslint src test --fix",
     "prepublishOnly": "npm run build",
     "test": "npm run lint && npm run jest -- --collectCoverage",
-    "test:dev": "npm run jest -- --watch"
+    "test:dev": "npm run lint && npm run jest -- --watch"
   }
 }

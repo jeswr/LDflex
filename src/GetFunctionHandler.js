@@ -1,5 +1,7 @@
-import { isPlainObject, isAsyncIterable } from './valueUtils';
-import { iterableToArray } from './iterableUtils';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+const valueUtils_1 = require('./valueUtils');
+const iterableUtils_1 = require('./iterableUtils');
 
 /**
  * Returns a function that requests the values of multiple properties.
@@ -12,26 +14,23 @@ import { iterableToArray } from './iterableUtils';
  * - fn({ p1: null, p2: null }) returns { p1: path[p1], p2: path[p2] }
  * Combinations of the above are possible by passing them in arrays.
  */
-export default class GetFunctionHandler {
+class GetFunctionHandler {
   handle(pathData, path) {
-    return (...args) => this.readProperties(path,
-      args.length === 1 ? args[0] : args, true);
+    return (...args) => this.readProperties(path, args.length === 1 ? args[0] : args, true);
   }
 
   async readProperties(path, properties, wrapSingleValues = false) {
     // Convert an async iterable to an array
-    if (isAsyncIterable(properties))
-      properties = await iterableToArray(properties);
-
+    if (valueUtils_1.isAsyncIterable(properties))
+      properties = await iterableUtils_1.iterableToArray(properties);
     // If passed an array, read every property
     if (Array.isArray(properties)) {
       const values = properties.map(p => this.readProperties(path, p));
       return Promise.all(values);
     }
-
     // If passed an object with property names as keys,
     // return an object with the values filled in
-    if (isPlainObject(properties)) {
+    if (valueUtils_1.isPlainObject(properties)) {
       // Use the key as property value if none is specified
       const keys = Object.keys(properties);
       properties = keys.map(key => properties[key] || key);
@@ -42,9 +41,9 @@ export default class GetFunctionHandler {
         results[keys[i]] = values[i];
       return results;
     }
-
     // Otherwise, perform a single property access
     const value = path[properties];
     return wrapSingleValues ? [value] : value;
   }
 }
+exports.default = GetFunctionHandler;

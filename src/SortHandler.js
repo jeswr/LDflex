@@ -1,3 +1,7 @@
+
+Object.defineProperty(exports, '__esModule', { value: true });
+const order_1 = require('../types/order');
+
 /**
  * Returns a function that creates a new path with the same values,
  * but sorted on the given property.
@@ -7,8 +11,8 @@
  *  - a predicate on the path proxy
  *  - a sort function on the path proxy (for multi-property sorting)
  */
-export default class SortHandler {
-  constructor(order = 'ASC') {
+class SortHandler {
+  constructor(order = order_1.order.ASC) {
     this.order = order;
   }
 
@@ -17,11 +21,9 @@ export default class SortHandler {
       // Do nothing if no sort properties were given
       if (properties.length === 0)
         return pathProxy;
-
       // Split off the first sort property and obtain its predicate
       const [property, ...rest] = properties;
       const { predicate } = pathProxy[property];
-
       // Sort on the first property, and create paths for the next one
       const childData = { property, predicate, sort: this.order };
       const childPath = pathData.extendPath(childData);
@@ -29,3 +31,4 @@ export default class SortHandler {
     };
   }
 }
+exports.default = SortHandler;
