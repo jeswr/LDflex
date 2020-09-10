@@ -48,18 +48,22 @@ export default class PathProxy {
       [data, settings] = [settings, {}];
 
     // Create the path's internal data object and the proxy that wraps it
+    // @ts-ignore
     const { apply, ...rawData } = data;
     const path = apply ? Object.assign(callPathFunction, rawData) : rawData;
     const proxy = new Proxy(path, this);
     path.proxy = proxy;
+    // @ts-ignore
     path.settings = settings;
     function callPathFunction(...args) {
       return apply(args, path, proxy);
     }
 
     // Add an extendPath method to create child paths
+    // @ts-ignore
     if (!path.extendPath) {
       const pathProxy = this;
+      // @ts-ignore
       path.extendPath = function extendPath(newData, parent = this) {
         return pathProxy.createPath(settings, { parent, extendPath, ...newData });
       };

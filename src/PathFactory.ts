@@ -23,6 +23,7 @@ export default class PathFactory {
   private _pathProxy: PathProxy;
   private _settings: PathFactorySettings;
   private _data: Data;
+  // @ts-ignore
   static defaultHandlers: LDflexProxyHandler = defaultHandlers
   constructor(settings, data) {
     // Store settings and data
@@ -41,6 +42,7 @@ export default class PathFactory {
     if (settings.context) {
       resolvers.push(new JSONLDResolver(settings.context));
       settings.parsedContext = new ContextParser().parse(settings.context)
+      //@ts-ignore
         .then(({ contextRaw }) => contextRaw);
     }
     else {

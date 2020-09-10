@@ -32,6 +32,7 @@ export default class JSONLDResolver {
    */
   resolve(property, pathData) {
     const predicate = lazyThenable(() => this.expandProperty(property));
+    // @ts-ignore
     const reverse = lazyThenable(() => this._context.then(({ contextRaw }) =>
       contextRaw[property] && contextRaw[property]['@reverse']));
     const resultsCache = this.getResultsCache(pathData, predicate, reverse);
@@ -66,6 +67,7 @@ export default class JSONLDResolver {
 
     // Expand the property to a full IRI
     const context = await this._context;
+    // @ts-ignore
     const expandedProperty = context.expandTerm(property, true);
     if (!ContextUtil.isValidIri(expandedProperty))
       throw new Error(`The JSON-LD context cannot expand the '${property}' property`);
@@ -76,6 +78,7 @@ export default class JSONLDResolver {
    * Extends the current JSON-LD context with the given context(s).
    */
   async extendContext(...contexts) {
+    // @ts-ignore
     await (this._context = this._context.then(({ contextRaw }) =>
       new ContextParser().parse([contextRaw, ...contexts])));
   }

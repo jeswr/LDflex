@@ -4,6 +4,7 @@ import {
   ensureArray, joinArrays,
   valueToTerm, hasPlainObjectArgs, isAsyncIterable,
 } from './valueUtils';
+import { mutation } from '../types/mutation';
 
 /**
  * Returns a function that, when called with arguments,
@@ -21,10 +22,10 @@ import {
  * - a pathExpression property on the path proxy and all non-raw arguments.
  */
 export default class MutationFunctionHandler {
-  constructor(mutationType, allowZeroArgs) {
-    this._mutationType = mutationType;
-    this._allowZeroArgs = allowZeroArgs;
-  }
+  constructor(
+    private _mutationType: mutation = mutation.INSERT, // TODO: Check if this is a valid default
+    private _allowZeroArgs: boolean = false
+    ) {}
 
   // Creates a function that performs a mutation
   handle(pathData, path) {

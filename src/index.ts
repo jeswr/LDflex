@@ -61,5 +61,6 @@ export {
   isPlainObject,
   hasPlainObjectArgs,
   valueToTerm,
-  termToPrimitive,
+  termToPrimitive
 };
+export * from './IterableMethodsHandler'

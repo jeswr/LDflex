@@ -6,6 +6,7 @@ export interface LDflexHandler {
 
 export type LDflexProxyHandler = {
     __esModule?: () => undefined;
+    // @ts-ignore
     [Symbol.asyncIterator]: AsyncIterableIterator<>; // TODO FIX
     //[handler extends AllowedHandlerNames]: LDflexHandler // TODO : Fix type definition
 } & {

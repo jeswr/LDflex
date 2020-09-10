@@ -1,3 +1,4 @@
+import { order } from '../types/order';
 import AsyncIteratorHandler from './AsyncIteratorHandler';
 import DataHandler from './DataHandler';
 import DeleteFunctionHandler from './DeleteFunctionHandler';
@@ -20,7 +21,7 @@ import SubjectsHandler from './SubjectsHandler';
 import ThenHandler from './ThenHandler';
 import ToArrayHandler from './ToArrayHandler';
 import { termToPrimitive } from './valueUtils';
-
+import * as IterableMethods from './IterableMethodsHandler'
 /**
  * A map with default property handlers.
  */
@@ -42,8 +43,8 @@ export default {
   sparql: new SparqlHandler(),
   subjects: new SubjectsHandler(),
   results: new ExecuteQueryHandler(),
-  sort: new SortHandler('ASC'),
-  sortDesc: new SortHandler('DESC'),
+  sort: new SortHandler(order.ASC),
+  sortDesc: new SortHandler(order.DESC),
   preload: new PreloadHandler(),
 
   // Add write functionality
@@ -71,6 +72,16 @@ export default {
   datatypes: handler((_, path) => path.toArray(term => term.datatype)),
   languages: handler((_, path) => path.toArray(term => term.language)),
 
+  // Further async/iteration helpers
+  every: new IterableMethods.every(),
+  find: new IterableMethods.find(),
+  forEach: new IterableMethods.forEach(),
+  map: new IterableMethods.map(),
+  reduce: new IterableMethods.reduce(),
+  reject: new IterableMethods.reject(),
+  some: new IterableMethods.some(),
+  transform: new IterableMethods.transform(),
+  
   // Parse a string into an LDflex object
   resolve: new StringToLDflexHandler(),
 };

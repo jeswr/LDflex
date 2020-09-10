@@ -1,7 +1,5 @@
 import { map } from 'async'
 
-import { isAsyncIterable } from './valueUtils';
-
 /**
  * Converts an asynchronously iterable path into an array.
  *
@@ -10,20 +8,7 @@ import { isAsyncIterable } from './valueUtils';
  */
 export default class ToArrayHandler {
   handle(pathData, path) {
-    // console.log('path', path)
-    // return async f => map(path, f ?? (async item => await item))
-    return async map => {
-      const items = [];
-      if (isAsyncIterable(path)) {
-        // Ensure the mapping function is valid
-        if (typeof map !== 'function')
-          map = item => item;
-        // Retrieve and map all elements
-        let index = 0;
-        for await (const item of path)
-          items.push(await map(item, index++));
-      }
-      return items;
-    };
+    return async (f : (value: any, index?: number) => any = item => item) => 
+      Promise.all((await map(path, async item => item)).map(async (v, i) => f(await v, i)))
   }
 }

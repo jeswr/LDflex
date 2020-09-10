@@ -1,6 +1,5 @@
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Traverses a path to collect mutationExpressions into an expression.
  * This is needed because mutations can be chained.
@@ -9,18 +8,18 @@ Object.defineProperty(exports, '__esModule', { value: true });
  * - a mutationExpressions property on the path proxy
  */
 class MutationExpressionsHandler {
-  async handle(pathData) {
-    const mutationExpressions = [];
-    // Add all mutationExpressions to the path
-    let current = pathData;
-    while (current) {
-      // Obtain and store mutationExpressions
-      if (current.mutationExpressions)
-        mutationExpressions.unshift(...await current.mutationExpressions);
-      // Move to parent link
-      current = current.parent;
+    async handle(pathData) {
+        const mutationExpressions = [];
+        // Add all mutationExpressions to the path
+        let current = pathData;
+        while (current) {
+            // Obtain and store mutationExpressions
+            if (current.mutationExpressions)
+                mutationExpressions.unshift(...await current.mutationExpressions);
+            // Move to parent link
+            current = current.parent;
+        }
+        return mutationExpressions;
     }
-    return mutationExpressions;
-  }
 }
 exports.default = MutationExpressionsHandler;

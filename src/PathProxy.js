@@ -1,7 +1,6 @@
-
-Object.defineProperty(exports, '__esModule', { value: true });
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const EMPTY = Object.create(null);
-
 /**
  * A PathProxy creates path expressions,
  * to which functionality can be attached.
@@ -24,57 +23,57 @@ const EMPTY = Object.create(null);
  * - extendPath, a method to create a child path with this path as parent
  */
 class PathProxy {
-  constructor({ handlers = EMPTY, resolvers = [] } = {}) {
-    this._handlers = handlers;
-    this._resolvers = resolvers;
-  }
-
-
-  /**
+    constructor({ handlers = EMPTY, resolvers = [] } = {}) {
+        this._handlers = handlers;
+        this._resolvers = resolvers;
+    }
+    /**
      * Creates a path Proxy with the given settings and internal data fields.
      */
-  createPath(settings = {}, data) {
-    // The settings parameter is optional
-    if (data === undefined)
-      [data, settings] = [settings, {}];
-    // Create the path's internal data object and the proxy that wraps it
-    const { apply, ...rawData } = data;
-    const path = apply ? Object.assign(callPathFunction, rawData) : rawData;
-    const proxy = new Proxy(path, this);
-    path.proxy = proxy;
-    path.settings = settings;
-    function callPathFunction(...args) {
-      return apply(args, path, proxy);
+    createPath(settings = {}, data) {
+        // The settings parameter is optional
+        if (data === undefined)
+            [data, settings] = [settings, {}];
+        // Create the path's internal data object and the proxy that wraps it
+        // @ts-ignore
+        const { apply, ...rawData } = data;
+        const path = apply ? Object.assign(callPathFunction, rawData) : rawData;
+        const proxy = new Proxy(path, this);
+        path.proxy = proxy;
+        // @ts-ignore
+        path.settings = settings;
+        function callPathFunction(...args) {
+            return apply(args, path, proxy);
+        }
+        // Add an extendPath method to create child paths
+        // @ts-ignore
+        if (!path.extendPath) {
+            const pathProxy = this;
+            // @ts-ignore
+            path.extendPath = function extendPath(newData, parent = this) {
+                return pathProxy.createPath(settings, { parent, extendPath, ...newData });
+            };
+        }
+        // Return the proxied path
+        return proxy;
     }
-    // Add an extendPath method to create child paths
-    if (!path.extendPath) {
-      const pathProxy = this;
-      path.extendPath = function extendPath(newData, parent = this) {
-        return pathProxy.createPath(settings, { parent, extendPath, ...newData });
-      };
-    }
-    // Return the proxied path
-    return proxy;
-  }
-
-
-  /**
+    /**
      * Handles access to a property
      */
-  get(pathData, property) {
-    // Handlers provide functionality for a specific property,
-    // so check if we find a handler first
-    const handler = this._handlers[property];
-    if (handler && typeof handler.handle === 'function')
-      return handler.handle(pathData, pathData.proxy);
-    // Resolvers provide functionality for arbitrary properties,
-    // so find a resolver that can handle this property
-    for (const resolver of this._resolvers) {
-      if (resolver.supports(property))
-        return resolver.resolve(property, pathData, pathData.proxy);
+    get(pathData, property) {
+        // Handlers provide functionality for a specific property,
+        // so check if we find a handler first
+        const handler = this._handlers[property];
+        if (handler && typeof handler.handle === 'function')
+            return handler.handle(pathData, pathData.proxy);
+        // Resolvers provide functionality for arbitrary properties,
+        // so find a resolver that can handle this property
+        for (const resolver of this._resolvers) {
+            if (resolver.supports(property))
+                return resolver.resolve(property, pathData, pathData.proxy);
+        }
+        // Otherwise, the property does not exist
+        return undefined;
     }
-    // Otherwise, the property does not exist
-    return undefined;
-  }
 }
 exports.default = PathProxy;

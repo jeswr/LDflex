@@ -1,8 +1,7 @@
-
-Object.defineProperty(exports, '__esModule', { value: true });
-const valueUtils_1 = require('./valueUtils');
-const iterableUtils_1 = require('./iterableUtils');
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const valueUtils_1 = require("./valueUtils");
+const iterableUtils_1 = require("./iterableUtils");
 /**
  * Returns a function that requests the values of multiple properties.
  * You can use this function to access properties as follows:
@@ -15,35 +14,34 @@ const iterableUtils_1 = require('./iterableUtils');
  * Combinations of the above are possible by passing them in arrays.
  */
 class GetFunctionHandler {
-  handle(pathData, path) {
-    return (...args) => this.readProperties(path, args.length === 1 ? args[0] : args, true);
-  }
-
-  async readProperties(path, properties, wrapSingleValues = false) {
-    // Convert an async iterable to an array
-    if (valueUtils_1.isAsyncIterable(properties))
-      properties = await iterableUtils_1.iterableToArray(properties);
-    // If passed an array, read every property
-    if (Array.isArray(properties)) {
-      const values = properties.map(p => this.readProperties(path, p));
-      return Promise.all(values);
+    handle(pathData, path) {
+        return (...args) => this.readProperties(path, args.length === 1 ? args[0] : args, true);
     }
-    // If passed an object with property names as keys,
-    // return an object with the values filled in
-    if (valueUtils_1.isPlainObject(properties)) {
-      // Use the key as property value if none is specified
-      const keys = Object.keys(properties);
-      properties = keys.map(key => properties[key] || key);
-      // Store the resolved properties by key
-      const results = {};
-      const values = await this.readProperties(path, properties);
-      for (let i = 0; i < keys.length; i++)
-        results[keys[i]] = values[i];
-      return results;
+    async readProperties(path, properties, wrapSingleValues = false) {
+        // Convert an async iterable to an array
+        if (valueUtils_1.isAsyncIterable(properties))
+            properties = await iterableUtils_1.iterableToArray(properties);
+        // If passed an array, read every property
+        if (Array.isArray(properties)) {
+            const values = properties.map(p => this.readProperties(path, p));
+            return Promise.all(values);
+        }
+        // If passed an object with property names as keys,
+        // return an object with the values filled in
+        if (valueUtils_1.isPlainObject(properties)) {
+            // Use the key as property value if none is specified
+            const keys = Object.keys(properties);
+            properties = keys.map(key => properties[key] || key);
+            // Store the resolved properties by key
+            const results = {};
+            const values = await this.readProperties(path, properties);
+            for (let i = 0; i < keys.length; i++)
+                results[keys[i]] = values[i];
+            return results;
+        }
+        // Otherwise, perform a single property access
+        const value = path[properties];
+        return wrapSingleValues ? [value] : value;
     }
-    // Otherwise, perform a single property access
-    const value = path[properties];
-    return wrapSingleValues ? [value] : value;
-  }
 }
 exports.default = GetFunctionHandler;
