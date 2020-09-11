@@ -96,6 +96,7 @@ exports.default = {
     forEach: new IterableMethods.forEach(),
     map: new IterableMethods.map(),
     reduce: new IterableMethods.reduce(),
+    reduceRight: new IterableMethods.reduceRight(),
     reject: new IterableMethods.reject(),
     some: new IterableMethods.some(),
     transform: new IterableMethods.transform(),

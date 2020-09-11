@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.termToPrimitive = exports.valueToTerm = exports.joinArrays = exports.ensureArray = exports.hasPlainObjectArgs = exports.isPlainObject = exports.isAsyncIterable = void 0;
 const data_model_1 = require("@rdfjs/data-model");
+// xsd._boolean
 const xsd = 'http://www.w3.org/2001/XMLSchema#';
 const xsdBoolean = `${xsd}boolean`;
 const xsdDateTime = `${xsd}dateTime`;

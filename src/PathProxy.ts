@@ -1,10 +1,6 @@
-import { LDflexProxyHandler } from "../types/handler";
+import { LDflexProxyHandlers } from "../types/handler";
 import { Data } from "../types/data";
-
-export interface Resolver {
-  supports: (property: string) => boolean;
-  resolve: (path, pathData, proxy) => any
-}
+import { Resolver } from "../types/Resolver";
 
 const EMPTY = Object.create(null);
 
@@ -30,10 +26,10 @@ const EMPTY = Object.create(null);
  * - extendPath, a method to create a child path with this path as parent
  */
 export default class PathProxy {
-  private _handlers: LDflexProxyHandler
+  private _handlers: LDflexProxyHandlers
   private _resolvers: Resolver[]
   constructor({ handlers = EMPTY, resolvers = [] } : {
-    handlers?: LDflexProxyHandler, resolvers?: Resolver[]
+    handlers?: LDflexProxyHandlers, resolvers?: Resolver[]
   } = {}) {
     this._handlers = handlers;
     this._resolvers = resolvers;
@@ -42,7 +38,7 @@ export default class PathProxy {
   /**
    * Creates a path Proxy with the given settings and internal data fields.
    */
-  createPath(settings: Data = {}, data: Data) {
+  createPath(settings = {}, data: Data) {
     // The settings parameter is optional
     if (data === undefined)
       [data, settings] = [settings, {}];
@@ -53,17 +49,14 @@ export default class PathProxy {
     const path = apply ? Object.assign(callPathFunction, rawData) : rawData;
     const proxy = new Proxy(path, this);
     path.proxy = proxy;
-    // @ts-ignore
     path.settings = settings;
     function callPathFunction(...args) {
       return apply(args, path, proxy);
     }
 
     // Add an extendPath method to create child paths
-    // @ts-ignore
     if (!path.extendPath) {
       const pathProxy = this;
-      // @ts-ignore
       path.extendPath = function extendPath(newData, parent = this) {
         return pathProxy.createPath(settings, { parent, extendPath, ...newData });
       };
@@ -76,7 +69,7 @@ export default class PathProxy {
   /**
    * Handles access to a property
    */
-  get(pathData, property) {
+  get(pathData: Data, property: string) {
     // Handlers provide functionality for a specific property,
     // so check if we find a handler first
     const handler = this._handlers[property];

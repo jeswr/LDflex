@@ -1,3 +1,7 @@
+import { Data } from "../types";
+import * as RDF from 'rdf-js'
+import { bindings } from "../types/bindings";
+
 /**
  * Executes the query represented by a path.
  *
@@ -7,7 +11,7 @@
  * - (optional) a resultsCache property on the path data
  */
 export default class ExecuteQueryHandler {
-  async *handle(pathData, path) {
+  async *handle(pathData: Data, path) {
     // Try to retrieve the result from cache
     const resultsCache = await pathData.resultsCache;
     if (resultsCache) {
@@ -35,7 +39,7 @@ export default class ExecuteQueryHandler {
   /**
    * Extracts the first term from a query result binding as a new path.
    */
-  extractTerm(binding, pathData) {
+  extractTerm(binding: bindings, pathData: Data) {
     // Extract the first term from the binding map
     if (binding.size !== 1)
       throw new Error('Only single-variable queries are supported');

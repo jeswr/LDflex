@@ -66,21 +66,22 @@ export default {
   toPrimitive: subjectToPrimitiveHandler(),
 
   // Add iteration helpers
-  toArray: new ToArrayHandler(),
+  toArray:   new ToArrayHandler(),
   termTypes: handler((_, path) => path.toArray(term => term.termType)),
   values:    handler((_, path) => path.toArray(term => term.value)),
   datatypes: handler((_, path) => path.toArray(term => term.datatype)),
   languages: handler((_, path) => path.toArray(term => term.language)),
 
   // Further async/iteration helpers
-  every: new IterableMethods.every(),
-  find: new IterableMethods.find(),
-  forEach: new IterableMethods.forEach(),
-  map: new IterableMethods.map(),
-  reduce: new IterableMethods.reduce(),
-  reject: new IterableMethods.reject(),
-  some: new IterableMethods.some(),
-  transform: new IterableMethods.transform(),
+  every:       new IterableMethods.every(),
+  find:        new IterableMethods.find(),
+  forEach:     new IterableMethods.forEach(),
+  map:         new IterableMethods.map(),
+  reduce:      new IterableMethods.reduce(),
+  reduceRight: new IterableMethods.reduceRight(),
+  reject:      new IterableMethods.reject(),
+  some:        new IterableMethods.some(),
+  transform:   new IterableMethods.transform(),
   
   // Parse a string into an LDflex object
   resolve: new StringToLDflexHandler(),

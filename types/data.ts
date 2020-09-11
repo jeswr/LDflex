@@ -1,11 +1,13 @@
-import { Quad_Subject } from 'rdf-js'
+import * as RDF from 'rdf-js'
 import { LDflexSettings } from './settings';
-import { LDflexProxyHandler } from './handler';
+import { LDflexProxyHandlers } from './handler';
 
 // TODO: CHECK DEFINITION
 export interface Data {
     parent?: null,
-    subject?: Quad_Subject,
-    proxy?: LDflexProxyHandler, // TODO: Check
-    settings?: LDflexSettings
+    subject?: RDF.Quad_Subject,
+    predicate?: RDF.Quad_Predicate,
+    proxy?: LDflexProxyHandlers, // TODO: Check
+    settings?: LDflexSettings,
+    extendPath?(pathData: Data, path)
 }

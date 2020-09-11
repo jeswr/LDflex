@@ -2,7 +2,7 @@ import * as IterableMethods from '../../src/IterableMethodsHandler'
 
 describe('find method handlers', () => {
   let handler, nullPath, objectPath, arrayPath,
-    emptyIteratorPath, filledArray, elementIterator, emptyClass;
+    emptyIteratorPath, filledArray, emptyClass;
 
   beforeAll(() => {
     nullPath = null;
@@ -10,7 +10,6 @@ describe('find method handlers', () => {
     arrayPath = [];
     emptyIteratorPath = asyncIteratorOf([]);
     filledArray = [1, 2, 3];
-    elementIterator = asyncIteratorOf(['a', Promise.resolve('b'), 'c'])
 
     emptyClass = [
       nullPath,
@@ -28,7 +27,7 @@ describe('find method handlers', () => {
     })
   })
 
-  describe('check behavior on array with promised elements', () => {
+  describe('check behavior on array with promised & non-promised elements', () => {
     it('works on a normal with non-promised elements', async () => {
       const find = handler.handle(null, asyncIteratorOf(['a', Promise.resolve('b'), 'c']))
       expect(await find(x => x == 'c')).toEqual('c')
@@ -45,17 +44,17 @@ describe('find method handlers', () => {
   describe('check behavior on empty iterators', () => {
     it('works on empty iterators', async () => {
       for (const emtpyPath of emptyClass) {
-        const find = handler.handle(null, arrayPath)
+        const find = handler.handle(null, emtpyPath)
         // TODO: Make test stricter
-        expect(await find(x => true)).toBeFalsy()
+        expect(await find(() => true)).toBeFalsy()
       }
     })
   })
 })
 
-describe('find method handlers', () => {
+describe('findSeries method handlers', () => {
   let handler, nullPath, objectPath, arrayPath,
-    emptyIteratorPath, filledArray, elementIterator, emptyClass;
+    emptyIteratorPath, filledArray, emptyClass;
 
   beforeAll(() => {
     nullPath = null;
@@ -63,7 +62,6 @@ describe('find method handlers', () => {
     arrayPath = [];
     emptyIteratorPath = asyncIteratorOf([]);
     filledArray = [1, 2, 3];
-    elementIterator = asyncIteratorOf(['a', Promise.resolve('b'), 'c'])
 
     emptyClass = [
       nullPath,
@@ -81,34 +79,34 @@ describe('find method handlers', () => {
     })
   })
 
-  describe('check behavior on array with promised elements', () => {
+  describe('check behavior on array with promised & non-promised elements', () => {
     it('works on a normal with non-promised elements', async () => {
       const find = handler.handle(null, asyncIteratorOf(['a', Promise.resolve('b'), 'c']))
-      expect(await find(x => x == 'c')).toEqual('c')
+      expect(await find(x => x === 'c')).toEqual('c')
     })
   })
 
   describe('check behavior on array with promised elements', () => {
     it('works on a normal with promised elements', async () => {
       const find = handler.handle(null, asyncIteratorOf(['a', Promise.resolve('b'), 'c']))
-      expect(await find(x => x == 'b')).toEqual('b')
+      expect(await find(x => x === 'b')).toEqual('b')
     })
   })
 
   describe('check behavior on empty iterators', () => {
     it('works on empty iterators', async () => {
       for (const emtpyPath of emptyClass) {
-        const find = handler.handle(null, arrayPath)
+        const find = handler.handle(null, emtpyPath)
         // TODO: Make test stricter
-        expect(await find(x => true)).toBeFalsy()
+        expect(await find(() => true)).toBeFalsy()
       }
     })
   })
 })
 
-describe('find method handlers', () => {
+describe('findLimit method handlers', () => {
   let handler, nullPath, objectPath, arrayPath,
-    emptyIteratorPath, filledArray, elementIterator, emptyClass;
+    emptyIteratorPath, filledArray, emptyClass;
 
   beforeAll(() => {
     nullPath = null;
@@ -116,7 +114,6 @@ describe('find method handlers', () => {
     arrayPath = [];
     emptyIteratorPath = asyncIteratorOf([]);
     filledArray = [1, 2, 3];
-    elementIterator = asyncIteratorOf(['a', Promise.resolve('b'), 'c'])
 
     emptyClass = [
       nullPath,
@@ -134,26 +131,26 @@ describe('find method handlers', () => {
     })
   })
 
-  describe('check behavior on array with promised elements', () => {
+  describe('check behavior on array with promised & non-promised elements', () => {
     it('works on a normal with non-promised elements', async () => {
       const find = handler.handle(null, asyncIteratorOf(['a', Promise.resolve('b'), 'c']))
-      expect(await find(x => x == 'c')).toEqual('c')
+      expect(await find(x => x === 'c')).toEqual('c')
     })
   })
 
   describe('check behavior on array with promised elements', () => {
     it('works on a normal with promised elements', async () => {
       const find = handler.handle(null, asyncIteratorOf(['a', Promise.resolve('b'), 'c']))
-      expect(await find(x => x == 'b')).toEqual('b')
+      expect(await find(x => x === 'b')).toEqual('b')
     })
   })
 
   describe('check behavior on empty iterators', () => {
     it('works on empty iterators', async () => {
       for (const emtpyPath of emptyClass) {
-        const find = handler.handle(null, arrayPath)
+        const find = handler.handle(null, emtpyPath)
         // TODO: Make test stricter
-        expect(await find(x => true)).toBeFalsy()
+        expect(await find(() => true)).toBeFalsy()
       }
     })
   })

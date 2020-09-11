@@ -16,8 +16,7 @@ exports.iterableToArray = iterableToArray;
  * Gets the first element of the iterable.
  */
 function getFirstItem(iterable) {
-    const iterator = iterable[Symbol.asyncIterator]();
-    return iterator.next().then(item => item.value);
+    return iterable[Symbol.asyncIterator]().next().then(item => item.value);
 }
 exports.getFirstItem = getFirstItem;
 /**

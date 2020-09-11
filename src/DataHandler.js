@@ -30,13 +30,13 @@ class DataHandler {
     // Resolves synchronous property access
     _resolveSyncDataPath(data) {
         for (const property of this._dataProperties)
-            data = data && data[property];
+            data && (data = data[property]);
         return data;
     }
     // Resolves asynchronous property access
     async _resolveAsyncDataPath(data) {
         for (const property of this._dataProperties)
-            data = data && await data[property];
+            data && (data = await data[property]);
         return data;
     }
 }

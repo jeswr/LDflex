@@ -1,5 +1,7 @@
 import { namedNode, literal } from '@rdfjs/data-model';
+import XSD from '../../../ont-to-ts/typescript_2/xsd/src'
 
+// xsd._boolean
 const xsd = 'http://www.w3.org/2001/XMLSchema#';
 
 const xsdBoolean = `${xsd}boolean`;

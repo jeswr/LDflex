@@ -45,7 +45,7 @@ export function toIterablePromise(iterable) {
  * Returns a memoized version of the iterable
  * that can be iterated over as many times as needed.
  */
-export function memoizeIterable(iterable) {
+export function memoizeIterable(iterable) { // TODO: [Symbol.asyncIterator]: async.memoize(iterable[Symbol.asyncIterator])
   const cache = [];
   let iterator = iterable[Symbol.asyncIterator]();
 

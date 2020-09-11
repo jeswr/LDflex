@@ -1,37 +1,28 @@
 import PathProxy from './PathProxy';
 import JSONLDResolver from './JSONLDResolver';
 import defaultHandlers from './defaultHandlers';
-import { ContextParser, JsonLdContext, JsonLdContextNormalized } from 'jsonld-context-parser';
-import { LDflexProxyHandler } from '../types/handler';
-import { MaybePromise } from '../types/util';
+import { ContextParser } from 'jsonld-context-parser';
+import { LDflexHandleFunction, LDflexHandler, LDflexProxyHandlers } from '../types/handler';
 import { Data } from '../types/data';
+import { LDflexSettings } from '../types';
+import { Resolver } from '../types/Resolver';
 
-interface PathFactorySettings {
-  context: JsonLdContext,
-  handlers?: LDflexProxyHandler,
-  parsedContext?: MaybePromise<JsonLdContextNormalized['contextRaw']>,
-  resolvers?: JSONLDResolver[], // May also have to hold invalid resolvers
-  queryEngine: {
-    execute: Function // TODO MAKE DEFINITION SPECIFIC
-  }
-}
 
 /**
  * A PathFactory creates paths with default settings.
  */
 export default class PathFactory {
   private _pathProxy: PathProxy;
-  private _settings: PathFactorySettings;
+  private _settings: LDflexSettings;
   private _data: Data;
-  // @ts-ignore
-  static defaultHandlers: LDflexProxyHandler = defaultHandlers
-  constructor(settings, data) {
+  static defaultHandlers: LDflexProxyHandlers = defaultHandlers;
+  constructor(settings: LDflexSettings, data?: Data) {
     // Store settings and data
     this._settings = settings = { ...settings };
     this._data = data = { ...data };
 
     // Prepare the handlers
-    const handlers = settings.handlers || defaultHandlers;
+    const handlers = settings.handlers ?? defaultHandlers;
     for (const key in handlers)
       handlers[key] = toHandler(handlers[key]);
     for (const key of Object.getOwnPropertySymbols(handlers))
@@ -42,10 +33,8 @@ export default class PathFactory {
     if (settings.context) {
       resolvers.push(new JSONLDResolver(settings.context));
       settings.parsedContext = new ContextParser().parse(settings.context)
-      //@ts-ignore
-        .then(({ contextRaw }) => contextRaw);
-    }
-    else {
+        .then(context => context.getContextRaw());
+    } else {
       settings.context = settings.parsedContext = {};
     }
 
@@ -60,7 +49,7 @@ export default class PathFactory {
   /**
    * Creates a path with the given (optional) settings and data.
    */
-  create(settings = {}, data) {
+  create(settings = {}, data?: Data) {
     // Apply defaults on settings and data
     return this._pathProxy.createPath(
       Object.assign(Object.create(null), this._settings, data ? settings : null),
@@ -71,15 +60,15 @@ export default class PathFactory {
 /**
  * Converts a handler function into a handler object.
  */
-export function toHandler(handle) {
-  return typeof handle.handle === 'function' ? handle : { handle };
+export function toHandler(handle: LDflexHandler | LDflexHandleFunction): LDflexHandler {
+  return 'handle' in handle ? handle : { handle };
 }
 
 /**
  * Converts a resolver function into a catch-all resolver object.
  */
-export function toResolver(resolve) {
-  return typeof resolve.resolve === 'function' ? resolve : { supports, resolve };
+export function toResolver(resolve: JSONLDResolver | JSONLDResolver['resolve']): Resolver {
+  return 'resolve' in resolve ? resolve : { supports, resolve }
 }
 
 // Catch-all resolvers support everything

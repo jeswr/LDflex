@@ -21,14 +21,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const IterableMethods = __importStar(require("../../src/IterableMethodsHandler"));
 describe('find method handlers', () => {
-    let handler, nullPath, objectPath, arrayPath, emptyIteratorPath, filledArray, elementIterator, emptyClass;
+    let handler, nullPath, objectPath, arrayPath, emptyIteratorPath, filledArray, emptyClass;
     beforeAll(() => {
         nullPath = null;
         objectPath = {};
         arrayPath = [];
         emptyIteratorPath = asyncIteratorOf([]);
         filledArray = [1, 2, 3];
-        elementIterator = asyncIteratorOf(['a', Promise.resolve('b'), 'c']);
         emptyClass = [
             nullPath,
             objectPath,
@@ -43,7 +42,7 @@ describe('find method handlers', () => {
             expect(await find(x => x > 2.5)).toEqual(3);
         });
     });
-    describe('check behavior on array with promised elements', () => {
+    describe('check behavior on array with promised & non-promised elements', () => {
         it('works on a normal with non-promised elements', async () => {
             const find = handler.handle(null, asyncIteratorOf(['a', Promise.resolve('b'), 'c']));
             expect(await find(x => x == 'c')).toEqual('c');
@@ -58,22 +57,21 @@ describe('find method handlers', () => {
     describe('check behavior on empty iterators', () => {
         it('works on empty iterators', async () => {
             for (const emtpyPath of emptyClass) {
-                const find = handler.handle(null, arrayPath);
+                const find = handler.handle(null, emtpyPath);
                 // TODO: Make test stricter
-                expect(await find(x => true)).toBeFalsy();
+                expect(await find(() => true)).toBeFalsy();
             }
         });
     });
 });
-describe('find method handlers', () => {
-    let handler, nullPath, objectPath, arrayPath, emptyIteratorPath, filledArray, elementIterator, emptyClass;
+describe('findSeries method handlers', () => {
+    let handler, nullPath, objectPath, arrayPath, emptyIteratorPath, filledArray, emptyClass;
     beforeAll(() => {
         nullPath = null;
         objectPath = {};
         arrayPath = [];
         emptyIteratorPath = asyncIteratorOf([]);
         filledArray = [1, 2, 3];
-        elementIterator = asyncIteratorOf(['a', Promise.resolve('b'), 'c']);
         emptyClass = [
             nullPath,
             objectPath,
@@ -88,37 +86,36 @@ describe('find method handlers', () => {
             expect(await find(x => x > 2.5)).toEqual(3);
         });
     });
-    describe('check behavior on array with promised elements', () => {
+    describe('check behavior on array with promised & non-promised elements', () => {
         it('works on a normal with non-promised elements', async () => {
             const find = handler.handle(null, asyncIteratorOf(['a', Promise.resolve('b'), 'c']));
-            expect(await find(x => x == 'c')).toEqual('c');
+            expect(await find(x => x === 'c')).toEqual('c');
         });
     });
     describe('check behavior on array with promised elements', () => {
         it('works on a normal with promised elements', async () => {
             const find = handler.handle(null, asyncIteratorOf(['a', Promise.resolve('b'), 'c']));
-            expect(await find(x => x == 'b')).toEqual('b');
+            expect(await find(x => x === 'b')).toEqual('b');
         });
     });
     describe('check behavior on empty iterators', () => {
         it('works on empty iterators', async () => {
             for (const emtpyPath of emptyClass) {
-                const find = handler.handle(null, arrayPath);
+                const find = handler.handle(null, emtpyPath);
                 // TODO: Make test stricter
-                expect(await find(x => true)).toBeFalsy();
+                expect(await find(() => true)).toBeFalsy();
             }
         });
     });
 });
-describe('find method handlers', () => {
-    let handler, nullPath, objectPath, arrayPath, emptyIteratorPath, filledArray, elementIterator, emptyClass;
+describe('findLimit method handlers', () => {
+    let handler, nullPath, objectPath, arrayPath, emptyIteratorPath, filledArray, emptyClass;
     beforeAll(() => {
         nullPath = null;
         objectPath = {};
         arrayPath = [];
         emptyIteratorPath = asyncIteratorOf([]);
         filledArray = [1, 2, 3];
-        elementIterator = asyncIteratorOf(['a', Promise.resolve('b'), 'c']);
         emptyClass = [
             nullPath,
             objectPath,
@@ -133,24 +130,24 @@ describe('find method handlers', () => {
             expect(await find(x => x > 2.5)).toEqual(3);
         });
     });
-    describe('check behavior on array with promised elements', () => {
+    describe('check behavior on array with promised & non-promised elements', () => {
         it('works on a normal with non-promised elements', async () => {
             const find = handler.handle(null, asyncIteratorOf(['a', Promise.resolve('b'), 'c']));
-            expect(await find(x => x == 'c')).toEqual('c');
+            expect(await find(x => x === 'c')).toEqual('c');
         });
     });
     describe('check behavior on array with promised elements', () => {
         it('works on a normal with promised elements', async () => {
             const find = handler.handle(null, asyncIteratorOf(['a', Promise.resolve('b'), 'c']));
-            expect(await find(x => x == 'b')).toEqual('b');
+            expect(await find(x => x === 'b')).toEqual('b');
         });
     });
     describe('check behavior on empty iterators', () => {
         it('works on empty iterators', async () => {
             for (const emtpyPath of emptyClass) {
-                const find = handler.handle(null, arrayPath);
+                const find = handler.handle(null, emtpyPath);
                 // TODO: Make test stricter
-                expect(await find(x => true)).toBeFalsy();
+                expect(await find(() => true)).toBeFalsy();
             }
         });
     });

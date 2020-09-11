@@ -17,7 +17,7 @@ class PathFactory {
         this._settings = settings = { ...settings };
         this._data = data = { ...data };
         // Prepare the handlers
-        const handlers = settings.handlers || defaultHandlers_1.default;
+        const handlers = settings.handlers ?? defaultHandlers_1.default;
         for (const key in handlers)
             handlers[key] = toHandler(handlers[key]);
         for (const key of Object.getOwnPropertySymbols(handlers))
@@ -27,8 +27,7 @@ class PathFactory {
         if (settings.context) {
             resolvers.push(new JSONLDResolver_1.default(settings.context));
             settings.parsedContext = new jsonld_context_parser_1.ContextParser().parse(settings.context)
-                //@ts-ignore
-                .then(({ contextRaw }) => contextRaw);
+                .then(context => context.getContextRaw());
         }
         else {
             settings.context = settings.parsedContext = {};
@@ -48,20 +47,19 @@ class PathFactory {
     }
 }
 exports.default = PathFactory;
-// @ts-ignore
 PathFactory.defaultHandlers = defaultHandlers_1.default;
 /**
  * Converts a handler function into a handler object.
  */
 function toHandler(handle) {
-    return typeof handle.handle === 'function' ? handle : { handle };
+    return 'handle' in handle ? handle : { handle };
 }
 exports.toHandler = toHandler;
 /**
  * Converts a resolver function into a catch-all resolver object.
  */
 function toResolver(resolve) {
-    return typeof resolve.resolve === 'function' ? resolve : { supports, resolve };
+    return 'resolve' in resolve ? resolve : { supports, resolve };
 }
 exports.toResolver = toResolver;
 // Catch-all resolvers support everything

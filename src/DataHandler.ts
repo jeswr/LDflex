@@ -1,3 +1,5 @@
+import { Data, MaybeFunction, MaybePromise } from "../types";
+
 const handlerFactory = (settings: { async: boolean; function?: boolean }) =>
   (...dataProperties : string[]) => new DataHandler(settings, ...dataProperties)
 
@@ -25,30 +27,30 @@ export default class DataHandler {
   static asyncFunction = handlerFactory({ async: true, function: true })
 
   // Resolves the data path, or returns a function that does so
-  handle(pathData) {
+  handle(pathData: Data): MaybeFunction<MaybePromise<Data>> {
     return !this._isFunction ?
       this._resolveDataPath(pathData) :
       () => this._resolveDataPath(pathData);
   }
 
   // Resolves the data path
-  _resolveDataPath(data) {
+  _resolveDataPath(data: Data): MaybePromise<Data> {
     return this._isAsync ?
         this._resolveAsyncDataPath(data) :
         this._resolveSyncDataPath(data);
   }
 
   // Resolves synchronous property access
-  _resolveSyncDataPath(data) {
+  _resolveSyncDataPath(data: Data): Data {
     for (const property of this._dataProperties)
-      data = data && data[property];
+      data &&= data[property];
     return data;
   }
 
   // Resolves asynchronous property access
-  async _resolveAsyncDataPath(data) {
+  async _resolveAsyncDataPath(data: Data): Promise<Data> {
     for (const property of this._dataProperties)
-      data = data && await data[property];
+      data &&= await data[property];
     return data;
   }
 }

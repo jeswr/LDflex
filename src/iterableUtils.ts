@@ -3,7 +3,7 @@ const done = {};
 /**
  * Returns the elements of the iterable as an array
  */
-export async function iterableToArray(iterable) {
+export async function iterableToArray<T>(iterable: Iterable<T>): Promise<T[]> {
   const items = [];
   for await (const item of iterable)
     items.push(item);
@@ -13,15 +13,14 @@ export async function iterableToArray(iterable) {
 /**
  * Gets the first element of the iterable.
  */
-export function getFirstItem(iterable) {
-  const iterator = iterable[Symbol.asyncIterator]();
-  return iterator.next().then(item => item.value);
+export function getFirstItem<T>(iterable: Iterable<T>): T {
+  return iterable[Symbol.asyncIterator]().next().then(item => item.value);
 }
 
 /**
  * Creates an async iterator with the item as only element.
  */
-export function iteratorFor(item) {
+export function iteratorFor<T>(item) {
   return {
     async next() {
       if (item !== done) {
