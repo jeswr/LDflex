@@ -1,3 +1,6 @@
+import { Data } from "../types";
+import * as RDF from 'rdf-js'
+
 const VARIABLE = /(SELECT\s+)(\?\S+)/;
 const QUERY_TAIL = /\}[^}]*$/;
 
@@ -16,8 +19,8 @@ export default class PreloadHandler {
   /**
    * Creates a preload function.
    */
-  handle(pathData, pathProxy) {
-    return async (...properties) => {
+  handle(pathData: Data, pathProxy) {
+    return async (...properties: string[]) => {
       if (properties.length > 0) {
         // Map the properties to predicates
         const predicates = await Promise.all(properties.map(async p =>
@@ -35,7 +38,7 @@ export default class PreloadHandler {
    * Creates a cache for the results of
    * resolving the given predicates against the path.
    */
-  async createResultsCache(predicates, pathData, path) {
+  async createResultsCache(predicates: string[], pathData: Data, path: Data) {
     // Execute the preloading query
     const { query, vars, resultVar } = await this.createQuery(predicates, path);
     const { settings: { queryEngine } } = pathData;
@@ -96,13 +99,13 @@ export default class PreloadHandler {
 }
 
 // Returns a unique string representation of the term
-function hashTerm(term) {
+function hashTerm(term: RDF.Term) {
   const { termType, value } = term;
   switch (termType) {
   case 'NamedNode':
     return value;
   case 'Literal':
-    const { language, datatype } = term;
+    const { language, datatype } = term as RDF.Literal;
     return `${termType}|${language}|${datatype.value}|${value}`;
   default:
     return `${termType}|${value}`;

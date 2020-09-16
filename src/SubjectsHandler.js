@@ -8,7 +8,7 @@ class SubjectsHandler {
         return pathData.extendPath({
             distinct: true,
             select: '?subject',
-            finalClause: () => '?subject ?predicate ?object.',
+            finalClause: () => ['subject', 'predicate', 'object'],
             property: pathData.property,
         });
     }

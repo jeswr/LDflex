@@ -23,10 +23,16 @@
   "dependencies": {
     "@rdfjs/data-model": "^1.1.2",
     "@repeaterjs/repeater": "^3.0.4",
+    "@types/n3": "^1.4.4",
+    "@types/ramda": "^0.27.17",
+    "@types/sparqljs": "^3.0.1",
     "async": "^3.2.0",
     "jsonld-context-parser": "^2.0.0",
     "n3": "^1.6.3",
-    "sparqlalgebrajs": "^2.4.0"
+    "ramda": "^0.27.1",
+    "sparql-builder": "^1.1.0",
+    "sparqlalgebrajs": "^2.4.0",
+    "sparqljs": "^3.1.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
@@ -40,6 +46,7 @@
     "eslint-plugin-jest": "^23.8.1",
     "husky": "^4.2.3",
     "jest": "^25.1.0",
+    "ts-jest": "^26.3.0",
     "typescript": "^4.0.2"
   },
   "scripts": {
@@ -49,7 +56,7 @@
     "jest": "jest",
     "lint": "eslint src test --fix",
     "prepublishOnly": "npm run build",
-    "test": "npm run lint && npm run jest -- --collectCoverage",
+    "test": "tsc && npm run lint && npm run jest -- --collectCoverage",
     "test:dev": "npm run jest -- --watch"
   }
 }

@@ -24,6 +24,7 @@ const EMPTY = Object.create(null);
  */
 class PathProxy {
     constructor({ handlers = EMPTY, resolvers = [] } = {}) {
+        // console.log('pathproxy constructor called')
         this._handlers = handlers;
         this._resolvers = resolvers;
     }
@@ -31,6 +32,7 @@ class PathProxy {
      * Creates a path Proxy with the given settings and internal data fields.
      */
     createPath(settings = {}, data) {
+        // console.log('create path called')
         // The settings parameter is optional
         if (data === undefined)
             [data, settings] = [settings, {}];
@@ -58,6 +60,11 @@ class PathProxy {
      * Handles access to a property
      */
     get(pathData, property) {
+        // console.log('--- get has been called ---')
+        // console.log(pathData)
+        // console.log('---')
+        // console.log(property)
+        // console.log('---')
         // Handlers provide functionality for a specific property,
         // so check if we find a handler first
         const handler = this._handlers[property];

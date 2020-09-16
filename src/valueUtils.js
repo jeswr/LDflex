@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.termToPrimitive = exports.valueToTerm = exports.joinArrays = exports.ensureArray = exports.hasPlainObjectArgs = exports.isPlainObject = exports.isAsyncIterable = void 0;
 const data_model_1 = require("@rdfjs/data-model");
+// import XSD from '../../../ont-to-ts/typescript_2/xsd/src'
 // xsd._boolean
 const xsd = 'http://www.w3.org/2001/XMLSchema#';
 const xsdBoolean = `${xsd}boolean`;

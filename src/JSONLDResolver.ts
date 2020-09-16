@@ -1,7 +1,8 @@
-import { ContextParser, Util as ContextUtil } from 'jsonld-context-parser';
+import { ContextParser, JsonLdContext, Util as ContextUtil } from 'jsonld-context-parser';
 import { namedNode } from '@rdfjs/data-model';
 import { lazyThenable } from './promiseUtils';
 import { valueToTerm } from './valueUtils';
+import { Data } from '../types';
 
 /**
  * Resolves property names of a path
@@ -13,7 +14,7 @@ export default class JSONLDResolver {
   /**
    * Creates a new resolver for the given context(s).
    */
-  constructor(...contexts) {
+  constructor(...contexts: JsonLdContext[]) {
     this.extendContext(...contexts);
   }
 
@@ -30,11 +31,10 @@ export default class JSONLDResolver {
    *
    * Example usage: person.friends.firstName
    */
-  resolve(property, pathData) {
+  resolve(property: string, pathData: Data) {
     const predicate = lazyThenable(() => this.expandProperty(property));
-    // @ts-ignore
     const reverse = lazyThenable(() => this._context.then(({ contextRaw }) =>
-      contextRaw[property] && contextRaw[property]['@reverse']));
+      contextRaw[property]?.['@reverse']));
     const resultsCache = this.getResultsCache(pathData, predicate, reverse);
     const newData = { property, predicate, resultsCache, reverse, apply: this.apply };
     return pathData.extendPath(newData);

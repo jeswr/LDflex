@@ -1,9 +1,9 @@
 module.exports = {
   clearMocks: true,
   collectCoverageFrom: [
-    "<rootDir>/src/**/*.(t|j)s",
+    '<rootDir>/src/**/*.(t|j)s',
   ],
   testMatch: [
-    "<rootDir>/test/**/*-test.(t|j)s",
-  ]
+    '<rootDir>/test/**/*-test.(t|j)s',
+  ],
 };

@@ -1,5 +1,6 @@
 import { getThen } from './promiseUtils';
 import { getFirstItem } from './iterableUtils';
+import { Data } from '../dist/ldflex-3/LDflex/types';
 
 /**
  * Thenable handler that resolves to either the subject
@@ -11,7 +12,7 @@ import { getFirstItem } from './iterableUtils';
  *  - (optional) results on the path proxy
  */
 export default class ThenHandler {
-  handle({ subject }, pathProxy) {
+  handle({ subject }: Data, pathProxy) {
     // Resolve to either the subject (zero-length path) or the first result
     return subject ?
       // If the subject is not a promise, it has already been resolved;

@@ -11,7 +11,7 @@ import { bindings } from "../types/bindings";
  * - (optional) a resultsCache property on the path data
  */
 export default class ExecuteQueryHandler {
-  async *handle(pathData: Data, path) {
+  async *handle(pathData: Data, path: Data) {
     // Try to retrieve the result from cache
     const resultsCache = await pathData.resultsCache;
     if (resultsCache) {

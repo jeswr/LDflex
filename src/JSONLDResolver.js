@@ -30,8 +30,7 @@ class JSONLDResolver {
      */
     resolve(property, pathData) {
         const predicate = promiseUtils_1.lazyThenable(() => this.expandProperty(property));
-        // @ts-ignore
-        const reverse = promiseUtils_1.lazyThenable(() => this._context.then(({ contextRaw }) => contextRaw[property] && contextRaw[property]['@reverse']));
+        const reverse = promiseUtils_1.lazyThenable(() => this._context.then(({ contextRaw }) => contextRaw[property]?.['@reverse']));
         const resultsCache = this.getResultsCache(pathData, predicate, reverse);
         const newData = { property, predicate, resultsCache, reverse, apply: this.apply };
         return pathData.extendPath(newData);

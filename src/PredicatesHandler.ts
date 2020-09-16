@@ -1,12 +1,14 @@
+import { Data } from "../types";
+
 /**
  * Queries for all predicates of a path subject
  */
 export default class PredicatesHandler {
-  handle(pathData) {
+  handle(pathData: Data) {
     return pathData.extendPath({
       distinct: true,
       select: '?predicate',
-      finalClause: queryVar => `${queryVar} ?predicate ?object.`,
+      finalClause: queryVar => [queryVar, 'predicate', 'object'],
       property: pathData.property,
     });
   }

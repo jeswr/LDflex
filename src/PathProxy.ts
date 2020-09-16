@@ -31,6 +31,7 @@ export default class PathProxy {
   constructor({ handlers = EMPTY, resolvers = [] } : {
     handlers?: LDflexProxyHandlers, resolvers?: Resolver[]
   } = {}) {
+    // console.log('pathproxy constructor called')
     this._handlers = handlers;
     this._resolvers = resolvers;
   }
@@ -39,6 +40,7 @@ export default class PathProxy {
    * Creates a path Proxy with the given settings and internal data fields.
    */
   createPath(settings = {}, data: Data) {
+    // console.log('create path called')
     // The settings parameter is optional
     if (data === undefined)
       [data, settings] = [settings, {}];
@@ -70,6 +72,11 @@ export default class PathProxy {
    * Handles access to a property
    */
   get(pathData: Data, property: string) {
+    // console.log('--- get has been called ---')
+    // console.log(pathData)
+    // console.log('---')
+    // console.log(property)
+    // console.log('---')
     // Handlers provide functionality for a specific property,
     // so check if we find a handler first
     const handler = this._handlers[property];

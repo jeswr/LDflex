@@ -8,7 +8,7 @@ class PredicatesHandler {
         return pathData.extendPath({
             distinct: true,
             select: '?predicate',
-            finalClause: queryVar => `${queryVar} ?predicate ?object.`,
+            finalClause: queryVar => [queryVar, 'predicate', 'object'],
             property: pathData.property,
         });
     }

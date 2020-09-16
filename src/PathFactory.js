@@ -8,6 +8,16 @@ const PathProxy_1 = __importDefault(require("./PathProxy"));
 const JSONLDResolver_1 = __importDefault(require("./JSONLDResolver"));
 const defaultHandlers_1 = __importDefault(require("./defaultHandlers"));
 const jsonld_context_parser_1 = require("jsonld-context-parser");
+const data_model_1 = require("@rdfjs/data-model");
+function mapObjects(object, map) {
+    for (const key in object)
+        object[key] = map(object[key]);
+    for (const key of Object.getOwnPropertySymbols(object))
+        // TODO: Fix this error caused by 'no implicit any' checks
+        // @ts-ignore
+        object[key] = map(object[key]);
+    return object;
+}
 /**
  * A PathFactory creates paths with default settings.
  */
@@ -17,11 +27,7 @@ class PathFactory {
         this._settings = settings = { ...settings };
         this._data = data = { ...data };
         // Prepare the handlers
-        const handlers = settings.handlers ?? defaultHandlers_1.default;
-        for (const key in handlers)
-            handlers[key] = toHandler(handlers[key]);
-        for (const key of Object.getOwnPropertySymbols(handlers))
-            handlers[key] = toHandler(handlers[key]);
+        const handlers = mapObjects(settings.handlers ?? defaultHandlers_1.default ?? {}, toHandler);
         // Prepare the resolvers
         const resolvers = (settings.resolvers || []).map(toResolver);
         if (settings.context) {
@@ -37,6 +43,23 @@ class PathFactory {
         // Remove PathProxy settings from the settings object
         delete settings.handlers;
         delete settings.resolvers;
+        // In some cases, such as when we call 'subjects' we
+        // dont need to call the 'create' method first.
+        // TODO: Add test for this
+        // return this
+        return new Proxy(this, {
+            get(target, prop, reciever) {
+                return target[prop] ?? target.create({ subject: data_model_1.namedNode('') })[prop];
+                return target.create(reciever);
+                if (prop === 'create') {
+                    return target.create;
+                }
+                else {
+                    // TODO - do this in a less hacky way - ie remove unecessary 'requires root' errors elsewhere
+                    return target.create({ subject: data_model_1.namedNode('') });
+                }
+            }
+        });
     }
     /**
      * Creates a path with the given (optional) settings and data.

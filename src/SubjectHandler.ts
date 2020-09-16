@@ -1,3 +1,5 @@
+import { Data } from "../types";
+
 /**
  * Returns a new path starting from the subject of the current path.
  *
@@ -6,7 +8,7 @@
  * - (optional) a parent property on the path data
  */
 export default class SubjectHandler {
-  handle(pathData) {
+  handle(pathData: Data) {
     // Traverse parents until we find a subject
     let { subject, parent } = pathData;
     while (!subject && parent)

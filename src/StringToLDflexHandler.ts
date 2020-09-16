@@ -1,8 +1,10 @@
+import { Data } from "../types";
+
 /**
  * Yields a function that interprets a string expression as an LDflex path.
  */
 export default class StringToLDflexHandler {
-  handle(pathData, path) {
+  handle(pathData: Data, path: Data) {
     // Resolves the given string expression against the LDflex object
     return (expression = '', ldflex = path) => {
       // An expression starts with a property access in dot or bracket notation

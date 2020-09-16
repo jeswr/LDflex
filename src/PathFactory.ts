@@ -6,7 +6,17 @@ import { LDflexHandleFunction, LDflexHandler, LDflexProxyHandlers } from '../typ
 import { Data } from '../types/data';
 import { LDflexSettings } from '../types';
 import { Resolver } from '../types/Resolver';
+import { namedNode } from '@rdfjs/data-model';
 
+function mapObjects<T extends {}>(object : T, map: ((value: any) => any)): T {
+  for (const key in object)
+    object[key] = map(object[key]);
+  for (const key of Object.getOwnPropertySymbols(object))
+    // TODO: Fix this error caused by 'no implicit any' checks
+    // @ts-ignore
+    object[key] = map(object[key])
+  return object
+}
 
 /**
  * A PathFactory creates paths with default settings.
@@ -22,11 +32,7 @@ export default class PathFactory {
     this._data = data = { ...data };
 
     // Prepare the handlers
-    const handlers = settings.handlers ?? defaultHandlers;
-    for (const key in handlers)
-      handlers[key] = toHandler(handlers[key]);
-    for (const key of Object.getOwnPropertySymbols(handlers))
-      handlers[key] = toHandler(handlers[key]);
+    const handlers = mapObjects(settings.handlers ?? defaultHandlers ?? {}, toHandler)
 
     // Prepare the resolvers
     const resolvers = (settings.resolvers || []).map(toResolver);
@@ -44,6 +50,26 @@ export default class PathFactory {
     // Remove PathProxy settings from the settings object
     delete settings.handlers;
     delete settings.resolvers;
+
+    // In some cases, such as when we call 'subjects' we
+    // dont need to call the 'create' method first.
+    // TODO: Add test for this
+    // return this
+    
+    return new Proxy(this, {
+      get(target, prop, reciever) {
+        return target[prop] ?? target.create({ subject: namedNode('') })[prop]
+
+
+        return target.create(reciever)
+        if (prop === 'create') {
+          return target.create
+        } else {
+          // TODO - do this in a less hacky way - ie remove unecessary 'requires root' errors elsewhere
+          return target.create({ subject: namedNode('') })
+        }
+      }
+    })
   }
 
   /**

@@ -29,6 +29,7 @@ const DeleteFunctionHandler_1 = __importDefault(require("./DeleteFunctionHandler
 const ExecuteQueryHandler_1 = __importDefault(require("./ExecuteQueryHandler"));
 const GetFunctionHandler_1 = __importDefault(require("./GetFunctionHandler"));
 const InsertFunctionHandler_1 = __importDefault(require("./InsertFunctionHandler"));
+const IterableMethods = __importStar(require("./IterableMethodsHandler"));
 const MutationExpressionsHandler_1 = __importDefault(require("./MutationExpressionsHandler"));
 const PathExpressionHandler_1 = __importDefault(require("./PathExpressionHandler"));
 const PredicateHandler_1 = __importDefault(require("./PredicateHandler"));
@@ -45,7 +46,6 @@ const SubjectsHandler_1 = __importDefault(require("./SubjectsHandler"));
 const ThenHandler_1 = __importDefault(require("./ThenHandler"));
 const ToArrayHandler_1 = __importDefault(require("./ToArrayHandler"));
 const valueUtils_1 = require("./valueUtils");
-const IterableMethods = __importStar(require("./IterableMethodsHandler"));
 /**
  * A map with default property handlers.
  */
@@ -84,12 +84,20 @@ exports.default = {
     toString: DataHandler_1.default.syncFunction('subject', 'value'),
     valueOf: subjectToPrimitiveHandler(),
     toPrimitive: subjectToPrimitiveHandler(),
+    // URI Handlers
+    prefix: subjectToComponentsHandler('prefix'),
+    namespace: subjectToComponentsHandler('namespace'),
+    fragment: subjectToComponentsHandler('fragment'),
     // Add iteration helpers
     toArray: new ToArrayHandler_1.default(),
-    termTypes: handler((_, path) => path.toArray(term => term.termType)),
-    values: handler((_, path) => path.toArray(term => term.value)),
-    datatypes: handler((_, path) => path.toArray(term => term.datatype)),
-    languages: handler((_, path) => path.toArray(term => term.language)),
+    termTypes: handler((_, path) => path.toArray((term) => term.termType)),
+    values: handler((_, path) => path.toArray((term) => term.value)),
+    datatypes: handler((_, path) => path.toArray((term) => term.datatype)),
+    languages: handler((_, path) => path.toArray((term) => term.language)),
+    // Add more iteration helpers
+    prefixes: handler((_, path) => path.toArray(subjectToComponentsHandler('prefix'))),
+    namespaces: handler((_, path) => path.toArray(subjectToComponentsHandler('namespace'))),
+    fragments: handler((_, path) => path.toArray(subjectToComponentsHandler('fragment'))),
     // Further async/iteration helpers
     every: new IterableMethods.every(),
     find: new IterableMethods.find(),
@@ -112,8 +120,38 @@ function termPropertyHandler(property) {
     // If a resolved subject is present,
     // behave as an RDF/JS term and synchronously expose the property;
     // otherwise, return a promise to the property value
-    return handler(({ subject }, path) => subject && (property in subject) ? subject[property] :
-        path.then && path.then(term => term?.[property]));
+    return handler(({ subject }, path) => 
+    // @ts-ignore
+    (subject && (property in subject)) ? subject[property] :
+        // @ts-ignore
+        path?.then((term) => term?.[property]));
+}
+function subjectToComponentsHandler(component) {
+    return handler(async ({ subject, prefixes = {} }, path) => {
+        if (subject?.termType === 'NamedNode') {
+            if (component === 'namespace') {
+                return /^[^]*[#\/]/.exec(subject.value)?.[0];
+            }
+            else if (component === 'fragment') {
+                return /(?![\/#])[^\/#]*$/.exec(subject.value)?.[0];
+            }
+            else if (component === 'prefix') {
+                const ns = /^[^]*[#\/]/.exec(subject.value)?.[0];
+                const pref = ns ? prefixes[ns] : undefined;
+                try {
+                    // TODO: Get prefixes from the engines first (if possible)
+                    const prefix = pref ?? /[a-z]*$/i.exec((await fetch(`http://prefix.cc/reverse?uri=${ns}`)).url)?.[0] ?? undefined;
+                    ns && prefix && (prefixes[ns] = prefix);
+                    return prefix;
+                }
+                catch {
+                    return undefined;
+                }
+            }
+        }
+        else
+            return undefined;
+    });
 }
 // Creates a handler that converts the subject into a primitive
 function subjectToPrimitiveHandler() {

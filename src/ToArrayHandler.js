@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const async_1 = require("async");
 /**
  * Converts an asynchronously iterable path into an array.
+ * This operation is parallelized
  *
  * Requires:
  * - (optional) an iterable path
