@@ -60,7 +60,7 @@ class PathProxy {
      * Handles access to a property
      */
     get(pathData, property) {
-        // console.log('--- get has been called ---')
+        console.log('--- get has been called ---', property);
         // console.log(pathData)
         // console.log('---')
         // console.log(property)

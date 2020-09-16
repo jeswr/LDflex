@@ -10,12 +10,28 @@ const iterableUtils_1 = require("./iterableUtils");
  *  - (optional) results on the path proxy
  */
 class AsyncIteratorHandler {
-    handle({ subject }, pathProxy) {
+    handle(pathData, pathProxy) {
+        const { select, subject } = pathData;
         // Return a one-item iterator of the subject if present;
         // otherwise, return all results of this path
+        // If there is a select statement, then we are iterating
+        // over query results. Otherwise we iterate over the predicats
+        // of the subject
+        // if (select && !subject) {
         return subject ?
             () => iterableUtils_1.iteratorFor(pathProxy.subject) :
             () => pathProxy.results[Symbol.asyncIterator]();
+        // } else {
+        //   return pathData.execute(`
+        //   SELECT DISTINCT ?p WHERE { ?s ?p ?o }
+        //   `)
+        //   // TODO MAKE THIS WORK
+        //   return () => pathProxy.extendPath({
+        //     distinct: true,
+        //     select: '?predicate',
+        //     finalClause: () => [subject?.value, 'predicate', 'object'],
+        //     property: pathProxy.property,
+        //   });
     }
 }
 exports.default = AsyncIteratorHandler;

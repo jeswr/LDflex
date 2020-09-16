@@ -81,9 +81,12 @@ export default {
   languages: handler((_, path) => path.toArray((term: RDF.Literal) => term.language)),
 
   // Add more iteration helpers
-  prefixes: handler((_, path) => path.toArray(subjectToComponentsHandler('prefix'))),
-  namespaces: handler((_, path) => path.toArray(subjectToComponentsHandler('namespace'))),
-  fragments: handler((_, path) => path.toArray(subjectToComponentsHandler('fragment'))),
+  // @ts-ignore
+  prefixes: handler((_, path) => path.toArray(subject => subjectToComponentsHandler('prefix').handle({ subject }))),
+  // @ts-ignore
+  namespaces: handler((_, path) => path.toArray(subject => subjectToComponentsHandler('namespace').handle({ subject }))),
+  // @ts-ignore
+  fragments: handler((_, path) => path.toArray(subject => subjectToComponentsHandler('fragment').handle({ subject }))),
 
   // Further async/iteration helpers
   every: new IterableMethods.every(),
@@ -121,7 +124,7 @@ function termPropertyHandler(property: 'termType' | 'value' | 'language' | 'data
 
 function subjectToComponentsHandler(component: 'namespace' | 'fragment' | 'prefix') {
 
-  return handler(async ({ subject, prefixes = {} }: Data, path): Promise<string | undefined> => {
+  return handler(async ({ subject, prefixes = {} }: Data, path?): Promise<string | undefined> => {
     if (subject?.termType === 'NamedNode') {
       if (component === 'namespace') {
         return /^[^]*[#\/]/.exec(subject.value)?.[0]

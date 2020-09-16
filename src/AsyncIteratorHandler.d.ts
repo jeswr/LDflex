@@ -8,5 +8,5 @@ import { Data } from '../types';
  *  - (optional) results on the path proxy
  */
 export default class AsyncIteratorHandler {
-    handle({ subject }: Data, pathProxy: Data): () => any;
+    handle(pathData: Data, pathProxy: Data): () => any;
 }

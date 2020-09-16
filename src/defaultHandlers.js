@@ -84,6 +84,7 @@ exports.default = {
     toString: DataHandler_1.default.syncFunction('subject', 'value'),
     valueOf: subjectToPrimitiveHandler(),
     toPrimitive: subjectToPrimitiveHandler(),
+    // TODO: unit tests
     // URI Handlers
     prefix: subjectToComponentsHandler('prefix'),
     namespace: subjectToComponentsHandler('namespace'),
@@ -95,9 +96,12 @@ exports.default = {
     datatypes: handler((_, path) => path.toArray((term) => term.datatype)),
     languages: handler((_, path) => path.toArray((term) => term.language)),
     // Add more iteration helpers
-    prefixes: handler((_, path) => path.toArray(subjectToComponentsHandler('prefix'))),
-    namespaces: handler((_, path) => path.toArray(subjectToComponentsHandler('namespace'))),
-    fragments: handler((_, path) => path.toArray(subjectToComponentsHandler('fragment'))),
+    // @ts-ignore
+    prefixes: handler((_, path) => path.toArray(subject => subjectToComponentsHandler('prefix').handle({ subject }))),
+    // @ts-ignore
+    namespaces: handler((_, path) => path.toArray(subject => subjectToComponentsHandler('namespace').handle({ subject }))),
+    // @ts-ignore
+    fragments: handler((_, path) => path.toArray(subject => subjectToComponentsHandler('fragment').handle({ subject }))),
     // Further async/iteration helpers
     every: new IterableMethods.every(),
     find: new IterableMethods.find(),

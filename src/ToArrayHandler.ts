@@ -1,3 +1,4 @@
+import { namedNode } from '@rdfjs/data-model'
 import { map } from 'async'
 import { Data } from '../types'
 
@@ -10,7 +11,10 @@ import { Data } from '../types'
  */
 export default class ToArrayHandler {
   handle(pathData: Data, path: Data) {
-    return async (f : (value: any, index?: number) => any = item => item) => 
-      Promise.all((await map(path, async item => item)).map(async (v, i) => f(await v, i)))
+    return async (f : ((value: any, index?: number) => any) = item => item) => {
+      // const fn = await (typeof f === 'object' && 'handle' in f ? f.handle : f)
+      // return undefined
+      return Promise.all((await map(path, async item => item)).map(async (v, i) => f(await v, i)))
+    }
   }
 }

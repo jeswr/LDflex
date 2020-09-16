@@ -29,8 +29,10 @@ export default class SparqlHandler {
   }
 
   pathExpressionToQuery(pathData, path, pathExpression) {
-    if (pathExpression.length < 2 && !pathData.finalClause)
+    if (pathExpression.length < 2 && !pathData.finalClause) {
+      console.log(pathData, path, pathExpression)
       throw new Error(`${pathData} should at least contain a subject and a predicate`);
+    }
 
     // Create triple patterns
     let queryVar = '?subject', sorts = [], clauses = [];

@@ -72,7 +72,7 @@ export default class PathProxy {
    * Handles access to a property
    */
   get(pathData: Data, property: string) {
-    // console.log('--- get has been called ---')
+    console.log('--- get has been called ---', property)
     // console.log(pathData)
     // console.log('---')
     // console.log(property)
