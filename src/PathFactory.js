@@ -47,6 +47,9 @@ class PathFactory {
         // dont need to call the 'create' method first.
         // TODO: Add test for this
         // return this
+        // interface P {
+        //   [x: keyof handlers]
+        // }
         return new Proxy(this, {
             get(target, prop, reciever) {
                 return target[prop] ?? target.create({ subject: data_model_1.namedNode('') })[prop];

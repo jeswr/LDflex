@@ -7,6 +7,7 @@ import { Resolver } from '../types/Resolver';
  * A PathFactory creates paths with default settings.
  */
 export default class PathFactory {
+    subjects: any;
     private _pathProxy;
     private _settings;
     private _data;

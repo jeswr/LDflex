@@ -32,6 +32,7 @@ class AsyncIteratorHandler {
         //     finalClause: () => [subject?.value, 'predicate', 'object'],
         //     property: pathProxy.property,
         //   });
+        // }
     }
 }
 exports.default = AsyncIteratorHandler;

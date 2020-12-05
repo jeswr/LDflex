@@ -1,4 +1,4 @@
-import { LDflexHandler } from '../types';
+import { Data, LDflexHandler } from '../types';
 import AsyncIteratorHandler from './AsyncIteratorHandler';
 import DataHandler from './DataHandler';
 import DeleteFunctionHandler from './DeleteFunctionHandler';
@@ -20,6 +20,12 @@ import SubjectHandler from './SubjectHandler';
 import SubjectsHandler from './SubjectsHandler';
 import ThenHandler from './ThenHandler';
 import ToArrayHandler from './ToArrayHandler';
+declare class PredicatesOf {
+    private normal;
+    private inverse;
+    constructor(normal?: boolean, inverse?: boolean);
+    handle(pathData: Data): Data;
+}
 declare const _default: {
     __esModule: () => undefined;
     then: ThenHandler;
@@ -50,6 +56,11 @@ declare const _default: {
     toString: DataHandler;
     valueOf: LDflexHandler;
     toPrimitive: LDflexHandler;
+    toRDFPrimitive: LDflexHandler;
+    list: LDflexHandler;
+    container: LDflexHandler;
+    containerAsSet: LDflexHandler;
+    predicatesOf: PredicatesOf;
     prefix: LDflexHandler;
     namespace: LDflexHandler;
     fragment: LDflexHandler;
@@ -64,13 +75,46 @@ declare const _default: {
     every: {
         handle(pathData: any, path: any): (parameterFunction: Function, memo?: any) => any;
     };
+    everyLimit: {
+        handle(pathData: any, path: any): (parameterFunction: Function, limit?: number) => any;
+    };
+    everySeries: {
+        handle(pathData: any, path: any): (parameterFunction: Function, memo?: any) => any;
+    };
+    filter: {
+        handle(pathData: any, path: any): (parameterFunction: Function, memo?: any) => any;
+    };
+    filterLimit: {
+        handle(pathData: any, path: any): (parameterFunction: Function, limit?: number) => any;
+    };
+    filterSeries: {
+        handle(pathData: any, path: any): (parameterFunction: Function, memo?: any) => any;
+    };
     find: {
+        handle(pathData: any, path: any): (parameterFunction: Function, memo?: any) => any;
+    };
+    findLimit: {
+        handle(pathData: any, path: any): (parameterFunction: Function, limit?: number) => any;
+    };
+    findSeries: {
         handle(pathData: any, path: any): (parameterFunction: Function, memo?: any) => any;
     };
     forEach: {
         handle(pathData: any, path: any): (parameterFunction: Function, memo?: any) => any;
     };
+    forEachLimit: {
+        handle(pathData: any, path: any): (parameterFunction: Function, limit?: number) => any;
+    };
+    forEachSeries: {
+        handle(pathData: any, path: any): (parameterFunction: Function, limit?: number) => any;
+    };
     map: {
+        handle(pathData: any, path: any): (parameterFunction: Function, memo?: any) => any;
+    };
+    mapLimit: {
+        handle(pathData: any, path: any): (parameterFunction: Function, limit?: number) => any;
+    };
+    mapSeries: {
         handle(pathData: any, path: any): (parameterFunction: Function, memo?: any) => any;
     };
     reduce: {
@@ -82,7 +126,19 @@ declare const _default: {
     reject: {
         handle(pathData: any, path: any): (parameterFunction: Function, memo?: any) => any;
     };
+    rejectLimit: {
+        handle(pathData: any, path: any): (parameterFunction: Function, limit?: number) => any;
+    };
+    rejectSeries: {
+        handle(pathData: any, path: any): (parameterFunction: Function, memo?: any) => any;
+    };
     some: {
+        handle(pathData: any, path: any): (parameterFunction: Function, memo?: any) => any;
+    };
+    someLimit: {
+        handle(pathData: any, path: any): (parameterFunction: Function, limit?: number) => any;
+    };
+    someSeries: {
         handle(pathData: any, path: any): (parameterFunction: Function, memo?: any) => any;
     };
     transform: {
@@ -90,6 +146,10 @@ declare const _default: {
     };
     resolve: StringToLDflexHandler;
 };
+/**
+ * Allows users to execute their own query
+ * through the query engine
+//  */
 /**
  * A map with default property handlers.
  */

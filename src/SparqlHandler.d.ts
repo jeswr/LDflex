@@ -6,7 +6,7 @@
  */
 export default class SparqlHandler {
     handle(pathData: any, path: any): Promise<string>;
-    pathExpressionToQuery(pathData: any, path: any, pathExpression: any): string;
+    pathExpressionToQuery(pathData: any, path: any, pathExpression: any): Promise<string>;
     mutationExpressionToQuery({ mutationType, conditions, predicateObjects }: {
         mutationType: any;
         conditions: any;

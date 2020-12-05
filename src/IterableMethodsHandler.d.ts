@@ -23,6 +23,11 @@ export declare const forEachLimit: {
         handle(pathData: any, path: any): (parameterFunction: Function, limit?: number) => any;
     };
 };
+export declare const forEachSeries: {
+    new (): {
+        handle(pathData: any, path: any): (parameterFunction: Function, limit?: number) => any;
+    };
+};
 export declare const forEachOf: {
     new (): {
         handle(pathData: any, path: any): (parameterFunction: Function, memo?: any) => any;

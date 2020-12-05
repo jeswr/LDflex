@@ -60,7 +60,7 @@ class PathProxy {
      * Handles access to a property
      */
     get(pathData, property) {
-        console.log('--- get has been called ---', property);
+        // console.log('--- get has been called ---', property, pathData)
         // console.log(pathData)
         // console.log('---')
         // console.log(property)
@@ -70,6 +70,7 @@ class PathProxy {
         const handler = this._handlers[property];
         if (handler && typeof handler.handle === 'function')
             return handler.handle(pathData, pathData.proxy);
+        console.log('after handle if thing');
         // Resolvers provide functionality for arbitrary properties,
         // so find a resolver that can handle this property
         for (const resolver of this._resolvers) {

@@ -7,6 +7,7 @@ import { Data } from '../types/data';
 import { LDflexSettings } from '../types';
 import { Resolver } from '../types/Resolver';
 import { namedNode } from '@rdfjs/data-model';
+import { Path } from 'ramda';
 
 function mapObjects<T extends {}>(object : T, map: ((value: any) => any)): T {
   for (const key in object)
@@ -21,7 +22,13 @@ function mapObjects<T extends {}>(object : T, map: ((value: any) => any)): T {
 /**
  * A PathFactory creates paths with default settings.
  */
+
+
+
 export default class PathFactory {
+  // TODO FIX
+  public subjects!: any;
+  //
   private _pathProxy: PathProxy;
   private _settings: LDflexSettings;
   private _data: Data;
@@ -55,6 +62,10 @@ export default class PathFactory {
     // dont need to call the 'create' method first.
     // TODO: Add test for this
     // return this
+
+    // interface P {
+    //   [x: keyof handlers]
+    // }
     
     return new Proxy(this, {
       get(target, prop, reciever) {

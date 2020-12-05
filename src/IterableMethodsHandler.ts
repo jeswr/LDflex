@@ -25,6 +25,7 @@ export const findSeries = IterableMethodsFactory(async.detectSeries)
 // TODO: ADD TESTS FOR BELOW FUNCTIONS
 export const forEach = IterableMethodsFactory(async.each)
 export const forEachLimit = IterableLimitMethodsFactory(async.eachLimit)
+export const forEachSeries = IterableLimitMethodsFactory(async.eachSeries)
 
 export const forEachOf = IterableMethodsFactory(async.eachOf)
 export const forEachOfLimit = IterableLimitMethodsFactory(async.eachOfLimit)

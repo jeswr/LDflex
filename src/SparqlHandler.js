@@ -24,9 +24,9 @@ class SparqlHandler {
             throw new Error(`${pathData} has no pathExpression property`);
         return this.pathExpressionToQuery(pathData, path, pathExpression);
     }
-    pathExpressionToQuery(pathData, path, pathExpression) {
+    async pathExpressionToQuery(pathData, path, pathExpression) {
         if (pathExpression.length < 2 && !pathData.finalClause) {
-            console.log(pathData, path, pathExpression);
+            // console.log(pathData, path, pathExpression)
             throw new Error(`${pathData} should at least contain a subject and a predicate`);
         }
         // Create triple patterns
@@ -36,14 +36,18 @@ class SparqlHandler {
             ({ queryVar, sorts, clauses } = this.expressionToTriplePatterns(pathExpression, queryVar));
         }
         if (pathData.finalClause)
-            clauses.push(pathData.finalClause(queryVar).map(x => data_model_1.variable(x)).map(x => '?' + x.value).join(' ').replace('??', '?') + '.');
+            // THIS IS NOT SUSTAINABLE IN THE LONG TERM - NEED TO MOVE TO SOME KIND OF QUERY BUILDER    
+            clauses.push((await pathData.finalClause(queryVar)).map(x => typeof x === 'string' ? data_model_1.variable(x) : x).map(x => x.termType === 'Variable' ? '?' + x.value : `<${x.value}>`).join(' ').replace('??', '?') + '.');
+        // console.log(await pathData.finalClause(queryVar))
         // Create SPARQL query body
         const distinct = pathData.distinct ? 'DISTINCT ' : '';
         const select = `SELECT ${distinct}${pathData.select ? pathData.select : queryVar}`;
         const where = ` WHERE {\n  ${clauses.join('\n  ')}\n}`;
         const orderClauses = sorts.map(({ order, variable }) => `${order}(${variable})`);
         const orderBy = orderClauses.length === 0 ? '' : `\nORDER BY ${orderClauses.join(' ')}`;
-        return `${select}${where}${orderBy}`;
+        const q = `${select}${where}${orderBy}`;
+        console.log(q);
+        return q;
     }
     mutationExpressionToQuery({ mutationType, conditions, predicateObjects }) {
         // If there are no mutations, there is no query
@@ -162,7 +166,9 @@ class SparqlHandler {
         let subjectStrings = [subjectString];
         if (reverse)
             [subjectStrings, objectStrings] = [objectStrings, subjectStrings];
+        console.log("inside triple patterns", subjectStrings, objectStrings);
         const objects = objectStrings.join(', ');
+        // console.log(subjectStrings)
         return subjectStrings.map(s => `${s} <${predicateTerm.value}> ${objects}.`);
     }
 }

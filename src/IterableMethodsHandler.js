@@ -19,7 +19,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.transform = exports.someSeries = exports.someLimit = exports.some = exports.rejectSeries = exports.rejectLimit = exports.reject = exports.reduceRight = exports.reduce = exports.mapSeries = exports.mapLimit = exports.map = exports.filterSeries = exports.filterLimit = exports.filter = exports.everySeries = exports.everyLimit = exports.every = exports.forEachOfSeries = exports.forEachOfLimit = exports.forEachOf = exports.forEachLimit = exports.forEach = exports.findSeries = exports.findLimit = exports.find = void 0;
+exports.transform = exports.someSeries = exports.someLimit = exports.some = exports.rejectSeries = exports.rejectLimit = exports.reject = exports.reduceRight = exports.reduce = exports.mapSeries = exports.mapLimit = exports.map = exports.filterSeries = exports.filterLimit = exports.filter = exports.everySeries = exports.everyLimit = exports.every = exports.forEachOfSeries = exports.forEachOfLimit = exports.forEachOf = exports.forEachSeries = exports.forEachLimit = exports.forEach = exports.findSeries = exports.findLimit = exports.find = void 0;
 const async = __importStar(require("async"));
 function IterableMethodsFactory(asyncFunction) {
     return class {
@@ -41,6 +41,7 @@ exports.findSeries = IterableMethodsFactory(async.detectSeries);
 // TODO: ADD TESTS FOR BELOW FUNCTIONS
 exports.forEach = IterableMethodsFactory(async.each);
 exports.forEachLimit = IterableLimitMethodsFactory(async.eachLimit);
+exports.forEachSeries = IterableLimitMethodsFactory(async.eachSeries);
 exports.forEachOf = IterableMethodsFactory(async.eachOf);
 exports.forEachOfLimit = IterableLimitMethodsFactory(async.eachOfLimit);
 exports.forEachOfSeries = IterableMethodsFactory(async.eachOfSeries);
