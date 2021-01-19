@@ -6,5 +6,5 @@ import { Data } from "../types";
  * - (optional) a predicate property on the path data
  */
 export default class PredicateHandler {
-    handle(pathData: Data): Promise<Data> | undefined;
+    handle(pathData: Data): Promise<Data>;
 }

@@ -35,13 +35,16 @@ class PathProxy {
         // console.log('create path called')
         // The settings parameter is optional
         if (data === undefined)
+            // @ts-ignore
             [data, settings] = [settings, {}];
         // Create the path's internal data object and the proxy that wraps it
         // @ts-ignore
         const { apply, ...rawData } = data;
         const path = apply ? Object.assign(callPathFunction, rawData) : rawData;
         const proxy = new Proxy(path, this);
+        // @ts-ignore
         path.proxy = proxy;
+        // @ts-ignore
         path.settings = settings;
         function callPathFunction(...args) {
             return apply(args, path, proxy);
@@ -50,6 +53,7 @@ class PathProxy {
         if (!path.extendPath) {
             const pathProxy = this;
             path.extendPath = function extendPath(newData, parent = this) {
+                // @ts-ignore
                 return pathProxy.createPath(settings, { parent, extendPath, ...newData });
             };
         }
@@ -75,6 +79,7 @@ class PathProxy {
         // so find a resolver that can handle this property
         for (const resolver of this._resolvers) {
             if (resolver.supports(property))
+                // @ts-ignore
                 return resolver.resolve(property, pathData, pathData.proxy);
         }
         // Otherwise, the property does not exist

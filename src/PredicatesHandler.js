@@ -5,6 +5,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 class PredicatesHandler {
     handle(pathData) {
+        // @ts-ignore
         return pathData.extendPath({
             distinct: true,
             select: '?predicate',

@@ -7,5 +7,5 @@ import { Data } from '../types';
  * - (optional) an iterable path
  */
 export default class ToArrayHandler {
-    handle(pathData: Data, path: Data): (f?: (value: any, index?: number | undefined) => any) => Promise<any[]>;
+    handle(pathData: Data, path: Data): (f?: (value: any, index?: number) => any) => Promise<any[]>;
 }

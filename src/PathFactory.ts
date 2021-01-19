@@ -52,6 +52,7 @@ export default class PathFactory {
     }
 
     // Instantiate PathProxy that will create the paths
+    // @ts-ignore
     this._pathProxy = new PathProxy({ handlers, resolvers });
 
     // Remove PathProxy settings from the settings object
@@ -69,6 +70,7 @@ export default class PathFactory {
     
     return new Proxy(this, {
       get(target, prop, reciever) {
+        // @ts-ignore
         return target[prop] ?? target.create({ subject: namedNode('') })[prop]
 
 

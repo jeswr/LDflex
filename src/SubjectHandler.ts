@@ -12,11 +12,13 @@ export default class SubjectHandler {
     // Traverse parents until we find a subject
     let { subject, parent } = pathData;
     while (!subject && parent)
+    // @ts-ignore
       ({ subject, parent } = parent);
 
     // Resolve the subject if it exists,
     // and return a path starting from that subject
     return !subject ? undefined : Promise.resolve(subject)
+    // @ts-ignore
       .then(value => pathData.extendPath({ subject: value }, null));
   }
 }

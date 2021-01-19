@@ -5,6 +5,7 @@ import { Data } from "../types";
  */
 export default class PredicatesHandler {
   handle(pathData: Data) {
+    // @ts-ignore
     return pathData.extendPath({
       distinct: true,
       select: '?predicate',

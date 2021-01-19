@@ -37,11 +37,13 @@ export default class SparqlHandler {
     // Create triple patterns
     let queryVar = '?subject', sorts = [], clauses = [];
     if (pathExpression.length > 1) {
+      // @ts-ignore
       queryVar = this.createVar(pathData.property);
       ({ queryVar, sorts, clauses } = this.expressionToTriplePatterns(pathExpression, queryVar));
     }
     if (pathData.finalClause)
-    // THIS IS NOT SUSTAINABLE IN THE LONG TERM - NEED TO MOVE TO SOME KIND OF QUERY BUILDER    
+    // THIS IS NOT SUSTAINABLE IN THE LONG TERM - NEED TO MOVE TO SOME KIND OF QUERY BUILDER
+    // @ts-ignore
       clauses.push((await pathData.finalClause(queryVar)).map(x => typeof x === 'string' ? variable(x) : x).map(x => x.termType === 'Variable' ? '?' + x.value : `<${x.value}>`).join(' ').replace('??', '?') + '.');
     // console.log(await pathData.finalClause(queryVar))
     // Create SPARQL query body
@@ -187,8 +189,8 @@ export default class SparqlHandler {
       [subjectStrings, objectStrings] = [objectStrings, subjectStrings];
     console.log("inside triple patterns", subjectStrings, objectStrings)
     const objects = objectStrings.join(', ');
-    // console.log(subjectStrings)
-    return subjectStrings.map(s => `${s} <${predicateTerm.value}> ${objects}.`);
+    const predicate = typeof predicateTerm === 'string' ? predicateTerm : `<${predicateTerm.value}>`;
+    return subjectStrings.map(s => `${s} ${predicate} ${objects}.`);
   }
 }
 

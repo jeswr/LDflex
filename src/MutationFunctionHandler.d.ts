@@ -30,7 +30,7 @@ export default class MutationFunctionHandler {
         predicateObjects: {
             predicate: any;
             reverse: any;
-            objects: any[] | null;
+            objects: any[];
         }[];
     })[] | {}[]>;
     createMutationExpression(pathData: any, path: any, values: any): Promise<{
@@ -43,8 +43,8 @@ export default class MutationFunctionHandler {
         predicateObjects: {
             predicate: any;
             reverse: any;
-            objects: any[] | null;
+            objects: any[];
         }[];
     }>;
-    extractObjects(pathData: any, path: any, values: any): Promise<any[] | null>;
+    extractObjects(pathData: any, path: any, values: any): Promise<any[]>;
 }

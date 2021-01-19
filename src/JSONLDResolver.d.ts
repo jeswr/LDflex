@@ -31,7 +31,7 @@ export default class JSONLDResolver {
     /**
      * Expands a JSON property key into a full IRI.
      */
-    expandProperty(property: any): Promise<import("rdf-js").NamedNode>;
+    expandProperty(property: any): Promise<string | import("rdf-js").NamedNode>;
     /**
      * Extends the current JSON-LD context with the given context(s).
      */

@@ -1,4 +1,3 @@
-"use strict";
 // import { namedNode } from '@rdfjs/data-model';
 // import { Data, order } from '../types';
 // import { variable } from '@rdfjs/data-model'

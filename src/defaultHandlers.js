@@ -56,6 +56,7 @@ class PredicatesOf {
         return pathData.extendPath({
             distinct: true,
             select: '?predicate',
+            // @ts-ignore
             finalClause: async (queryVar) => [await pathData.subject, 'predicate', 'object'],
             property: pathData.property,
         });
@@ -249,6 +250,7 @@ function subjectToPrimitiveHandler_3(set) {
         return set ? new Set(container) : container;
     });
 }
+// TODO: Discuass handling of setting values
 function subjectToPrimitiveHandler_4(set) {
     return handler(async ({ subject }, path) => {
         switch (`${await path["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"]}`) {
@@ -260,6 +262,9 @@ function subjectToPrimitiveHandler_4(set) {
             case "http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq":
             case "http://www.w3.org/1999/02/22-rdf-syntax-ns#Container":
                 return await path.container;
+            default:
+                // In this case none of the appropriate containers apply
+                return subject;
         }
     });
 }

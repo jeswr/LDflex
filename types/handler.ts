@@ -5,9 +5,11 @@ export interface LDflexHandler {
 }
 
 export type LDflexProxyHandlers = {
+    // @ts-ignore
     readonly [x: string]: LDflexHandler;
     readonly [Symbol.asyncIterator]: AsyncIterableIterator<any>;
 } | {
+    // @ts-ignore
     readonly __esModule: () => undefined;
 };
 

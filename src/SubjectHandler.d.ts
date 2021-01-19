@@ -7,5 +7,5 @@ import { Data } from "../types";
  * - (optional) a parent property on the path data
  */
 export default class SubjectHandler {
-    handle(pathData: Data): Promise<Data> | undefined;
+    handle(pathData: Data): Promise<Data>;
 }

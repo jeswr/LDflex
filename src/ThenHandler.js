@@ -18,6 +18,7 @@ class ThenHandler {
             // If the subject is not a promise, it has already been resolved;
             // consumers should not resolve it, but access its properties directly.
             // This avoids infinite `then` chains when `await`ing this path.
+            // @ts-ignore
             subject.then && promiseUtils_1.getThen(() => pathProxy.subject) :
             // Otherwise, return the first result of this path
             promiseUtils_1.getThen(() => iterableUtils_1.getFirstItem(pathProxy.results));

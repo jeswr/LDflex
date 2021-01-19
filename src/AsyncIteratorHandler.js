@@ -11,6 +11,7 @@ const iterableUtils_1 = require("./iterableUtils");
  */
 class AsyncIteratorHandler {
     handle(pathData, pathProxy) {
+        // @ts-ignore
         const { select, subject } = pathData;
         // Return a one-item iterator of the subject if present;
         // otherwise, return all results of this path
@@ -20,6 +21,7 @@ class AsyncIteratorHandler {
         // if (select && !subject) {
         return subject ?
             () => iterableUtils_1.iteratorFor(pathProxy.subject) :
+            // @ts-ignore
             () => pathProxy.results[Symbol.asyncIterator]();
         // } else {
         //   return pathData.execute(`

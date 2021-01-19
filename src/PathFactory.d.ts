@@ -18,21 +18,16 @@ export default class PathFactory {
      */
     create(settings?: {}, data?: Data): {
         [x: string]: any;
-        property: string | undefined;
-        resultsCache?: Data | undefined;
+        property: string;
+        resultsCache?: Data;
         results: Data;
-        parent?: null | undefined;
-        subject?: import("rdf-js").NamedNode | import("rdf-js").BlankNode | import("rdf-js").Variable | undefined;
-        sparql?: string | undefined;
-        predicate?: import("rdf-js").NamedNode | import("rdf-js").Variable | undefined;
-        proxy?: {
-            readonly [x: string]: LDflexHandler;
-            readonly [Symbol.asyncIterator]: AsyncIterableIterator<any>;
-        } | {
-            readonly __esModule: () => undefined;
-        } | undefined;
+        parent?: null;
+        subject?: import("rdf-js").Quad_Subject;
+        sparql?: string;
+        predicate?: import("rdf-js").Quad_Predicate;
+        proxy?: LDflexProxyHandlers;
         settings: LDflexSettings;
-        extendPath(pathData: Data, path?: Data | undefined): Data;
+        extendPath(pathData: Data, path?: Data): Data;
         finalClause?(v: string): [string, string, string];
     };
 }

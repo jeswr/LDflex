@@ -10,6 +10,7 @@ export default class PredicateHandler {
   handle(pathData: Data) {
     const { predicate } = pathData;
     return !predicate ? undefined : Promise.resolve(predicate)
+    // @ts-ignore
       .then(subject => pathData.extendPath({ subject }, null));
   }
 }

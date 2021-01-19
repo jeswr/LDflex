@@ -3,6 +3,7 @@ import { namedNode } from '@rdfjs/data-model';
 import { lazyThenable } from './promiseUtils';
 import { valueToTerm } from './valueUtils';
 import { Data } from '../types';
+import { translate } from 'sparqlalgebrajs';
 
 /**
  * Resolves property names of a path
@@ -33,10 +34,12 @@ export default class JSONLDResolver {
    */
   resolve(property: string, pathData: Data) {
     const predicate = lazyThenable(() => this.expandProperty(property));
+    // @ts-ignore
     const reverse = lazyThenable(() => this._context.then(({ contextRaw }) =>
       contextRaw[property]?.['@reverse']));
     const resultsCache = this.getResultsCache(pathData, predicate, reverse);
     const newData = { property, predicate, resultsCache, reverse, apply: this.apply };
+    // @ts-ignore
     return pathData.extendPath(newData);
   }
 
@@ -69,9 +72,20 @@ export default class JSONLDResolver {
     const context = await this._context;
     // @ts-ignore
     const expandedProperty = context.expandTerm(property, true);
-    if (!ContextUtil.isValidIri(expandedProperty))
-      throw new Error(`The JSON-LD context cannot expand the '${property}' property`);
-    return namedNode(expandedProperty);
+    if (ContextUtil.isValidIri(expandedProperty)) {
+      return namedNode(expandedProperty);
+    }
+    else if (typeof expandedProperty === 'string') {
+      // Wrap inside try/catch as 'translate' throws error on invalid paths
+      try {
+        translate(`SELECT * WHERE { ?s ${expandedProperty} ?o }`);
+        return expandedProperty;
+      }
+      catch (e) {
+        throw new Error(`The JSON-LD context cannot expand the '${property}' property`);
+      }
+    }
+    throw new Error(`The JSON-LD context cannot expand the '${property}' property`);
   }
 
   /**

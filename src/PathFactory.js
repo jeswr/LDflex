@@ -39,6 +39,7 @@ class PathFactory {
             settings.context = settings.parsedContext = {};
         }
         // Instantiate PathProxy that will create the paths
+        // @ts-ignore
         this._pathProxy = new PathProxy_1.default({ handlers, resolvers });
         // Remove PathProxy settings from the settings object
         delete settings.handlers;
@@ -52,6 +53,7 @@ class PathFactory {
         // }
         return new Proxy(this, {
             get(target, prop, reciever) {
+                // @ts-ignore
                 return target[prop] ?? target.create({ subject: data_model_1.namedNode('') })[prop];
                 return target.create(reciever);
                 if (prop === 'create') {

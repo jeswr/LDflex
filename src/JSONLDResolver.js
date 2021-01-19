@@ -4,6 +4,7 @@ const jsonld_context_parser_1 = require("jsonld-context-parser");
 const data_model_1 = require("@rdfjs/data-model");
 const promiseUtils_1 = require("./promiseUtils");
 const valueUtils_1 = require("./valueUtils");
+const sparqlalgebrajs_1 = require("sparqlalgebrajs");
 /**
  * Resolves property names of a path
  * to their corresponding IRIs through a JSON-LD context.
@@ -30,9 +31,11 @@ class JSONLDResolver {
      */
     resolve(property, pathData) {
         const predicate = promiseUtils_1.lazyThenable(() => this.expandProperty(property));
+        // @ts-ignore
         const reverse = promiseUtils_1.lazyThenable(() => this._context.then(({ contextRaw }) => contextRaw[property]?.['@reverse']));
         const resultsCache = this.getResultsCache(pathData, predicate, reverse);
         const newData = { property, predicate, resultsCache, reverse, apply: this.apply };
+        // @ts-ignore
         return pathData.extendPath(newData);
     }
     /**
@@ -62,9 +65,20 @@ class JSONLDResolver {
         const context = await this._context;
         // @ts-ignore
         const expandedProperty = context.expandTerm(property, true);
-        if (!jsonld_context_parser_1.Util.isValidIri(expandedProperty))
-            throw new Error(`The JSON-LD context cannot expand the '${property}' property`);
-        return data_model_1.namedNode(expandedProperty);
+        if (jsonld_context_parser_1.Util.isValidIri(expandedProperty)) {
+            return data_model_1.namedNode(expandedProperty);
+        }
+        else if (typeof expandedProperty === 'string') {
+            // Wrap inside try/catch as 'translate' throws error on invalid paths
+            try {
+                sparqlalgebrajs_1.translate(`SELECT * WHERE { ?s ${expandedProperty} ?o }`);
+                return expandedProperty;
+            }
+            catch (e) {
+                throw new Error(`The JSON-LD context cannot expand the '${property}' property`);
+            }
+        }
+        throw new Error(`The JSON-LD context cannot expand the '${property}' property`);
     }
     /**
      * Extends the current JSON-LD context with the given context(s).

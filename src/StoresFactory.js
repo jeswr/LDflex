@@ -1,4 +1,3 @@
-"use strict";
 // /**
 //  * Used to set-up configuration across multiple
 //  */

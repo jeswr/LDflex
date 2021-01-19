@@ -23,6 +23,7 @@ class PreloadHandler {
                 // Map the properties to predicates
                 const predicates = await Promise.all(properties.map(async (p) => (await pathProxy[p].predicate).value));
                 // Create and attach the results cache to the path data
+                // @ts-ignore
                 pathData.resultsCache =
                     await this.createResultsCache(predicates, pathData, pathProxy);
             }
@@ -51,6 +52,7 @@ class PreloadHandler {
                     propertyCache[predicate] = [];
                 // Create the result path
                 const resultData = { subject: result, propertyCache };
+                // @ts-ignore
                 resultsCache[hash] = pathData.extendPath(resultData, null);
             }
             // Create and cache a possible property value path from the binding
@@ -58,6 +60,7 @@ class PreloadHandler {
             for (let i = 0; i < vars.length; i++) {
                 const value = binding.get(vars[i]);
                 if (value) {
+                    // @ts-ignore
                     const valuePath = pathData.extendPath({ subject: value }, null);
                     propertyCache[predicates[i]].push(valuePath);
                 }

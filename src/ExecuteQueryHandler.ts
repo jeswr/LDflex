@@ -15,6 +15,7 @@ export default class ExecuteQueryHandler {
     // Try to retrieve the result from cache
     const resultsCache = await pathData.resultsCache;
     if (resultsCache) {
+      // @ts-ignore
       for (const result of resultsCache)
         yield result;
       return;
@@ -46,6 +47,7 @@ export default class ExecuteQueryHandler {
     const subject = binding.values().next().value;
 
     // Each result is a new path that starts from the term as subject
+    // @ts-ignore
     return pathData.extendPath({ subject }, null);
   }
 }

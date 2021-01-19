@@ -5,6 +5,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 class SubjectsHandler {
     handle(pathData) {
+        // @ts-ignore
         return pathData.extendPath({
             distinct: true,
             select: '?subject',

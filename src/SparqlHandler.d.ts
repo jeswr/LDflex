@@ -17,7 +17,7 @@ export default class SparqlHandler {
         sorts: any[];
         clauses: any[];
     };
-    createVar(suggestion: string | undefined, scope: any): string;
+    createVar(suggestion: string, scope: any): string;
     termToString(term: any): string;
     triplePatterns(subjectString: any, predicateTerm: any, objectStrings: any, reverse?: boolean): string[];
 }

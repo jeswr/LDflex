@@ -1,4 +1,4 @@
-import { Data } from '../dist/ldflex-3/LDflex/types';
+import { Data } from '../types';
 /**
  * Thenable handler that resolves to either the subject
  * of the first item of the results.

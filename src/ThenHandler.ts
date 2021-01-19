@@ -1,6 +1,6 @@
 import { getThen } from './promiseUtils';
 import { getFirstItem } from './iterableUtils';
-import { Data } from '../dist/ldflex-3/LDflex/types';
+import { Data } from '../types';
 
 /**
  * Thenable handler that resolves to either the subject
@@ -18,6 +18,7 @@ export default class ThenHandler {
       // If the subject is not a promise, it has already been resolved;
       // consumers should not resolve it, but access its properties directly.
       // This avoids infinite `then` chains when `await`ing this path.
+      // @ts-ignore
       subject.then && getThen(() => pathProxy.subject) :
       // Otherwise, return the first result of this path
       getThen(() => getFirstItem(pathProxy.results));

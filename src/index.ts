@@ -17,7 +17,7 @@ import ReplaceFunctionHandler from './ReplaceFunctionHandler';
 import SetFunctionHandler from './SetFunctionHandler';
 import SortHandler from './SortHandler';
 import SparqlHandler from './SparqlHandler';
-import StoresFactory from './StoresFactory'
+// import StoresFactory from './StoresFactory'
 import StringToLDflexHandler from './StringToLDflexHandler';
 import SubjectHandler from './SubjectHandler';
 import SubjectsHandler from './SubjectsHandler';
@@ -48,7 +48,7 @@ export {
   SetFunctionHandler,
   SortHandler,
   SparqlHandler,
-  StoresFactory,
+  // StoresFactory,
   StringToLDflexHandler,
   SubjectHandler,
   SubjectsHandler,
@@ -63,6 +63,6 @@ export {
   isPlainObject,
   hasPlainObjectArgs,
   valueToTerm,
-  termToPrimitive
+  termToPrimitive,
 };
 export * from './IterableMethodsHandler'

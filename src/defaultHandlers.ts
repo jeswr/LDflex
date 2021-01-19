@@ -36,6 +36,7 @@ class PredicatesOf { // TOFO PROPERLy
     return pathData.extendPath({
       distinct: true,
       select: '?predicate',
+      // @ts-ignore
       finalClause: async queryVar => [await pathData.subject, 'predicate', 'object'],
       property: pathData.property,
     });

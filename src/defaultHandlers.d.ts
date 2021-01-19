@@ -27,7 +27,7 @@ declare class PredicatesOf {
     handle(pathData: Data): Data;
 }
 declare const _default: {
-    __esModule: () => undefined;
+    __esModule: () => any;
     then: ThenHandler;
     [Symbol.asyncIterator]: AsyncIteratorHandler;
     get: GetHandler;

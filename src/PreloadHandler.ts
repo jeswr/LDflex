@@ -27,6 +27,7 @@ export default class PreloadHandler {
           (await pathProxy[p].predicate).value));
 
         // Create and attach the results cache to the path data
+        // @ts-ignore
         pathData.resultsCache =
           await this.createResultsCache(predicates, pathData, pathProxy);
       }
@@ -57,6 +58,7 @@ export default class PreloadHandler {
           propertyCache[predicate] = [];
         // Create the result path
         const resultData = { subject: result, propertyCache };
+        // @ts-ignore
         resultsCache[hash] = pathData.extendPath(resultData, null);
       }
 
@@ -65,6 +67,7 @@ export default class PreloadHandler {
       for (let i = 0; i < vars.length; i++) {
         const value = binding.get(vars[i]);
         if (value) {
+          // @ts-ignore
           const valuePath = pathData.extendPath({ subject: value }, null);
           propertyCache[predicates[i]].push(valuePath);
         }

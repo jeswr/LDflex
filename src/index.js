@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.termToPrimitive = exports.valueToTerm = exports.hasPlainObjectArgs = exports.isPlainObject = exports.toIterablePromise = exports.lazyThenable = exports.iteratorFor = exports.getThen = exports.getFirstItem = exports.defaultHandlers = exports.ToArrayHandler = exports.ThenHandler = exports.SubjectsHandler = exports.SubjectHandler = exports.StringToLDflexHandler = exports.StoresFactory = exports.SparqlHandler = exports.SortHandler = exports.SetFunctionHandler = exports.ReplaceFunctionHandler = exports.PropertiesHandler = exports.PreloadHandler = exports.PredicatesHandler = exports.PredicateHandler = exports.PathProxy = exports.PathFactory = exports.PathExpressionHandler = exports.MutationFunctionHandler = exports.MutationExpressionsHandler = exports.JSONLDResolver = exports.InsertFunctionHandler = exports.ExecuteQueryHandler = exports.DeleteFunctionHandler = exports.DataHandler = exports.AsyncIteratorHandler = void 0;
+exports.termToPrimitive = exports.valueToTerm = exports.hasPlainObjectArgs = exports.isPlainObject = exports.toIterablePromise = exports.lazyThenable = exports.iteratorFor = exports.getThen = exports.getFirstItem = exports.defaultHandlers = exports.ToArrayHandler = exports.ThenHandler = exports.SubjectsHandler = exports.SubjectHandler = exports.StringToLDflexHandler = exports.SparqlHandler = exports.SortHandler = exports.SetFunctionHandler = exports.ReplaceFunctionHandler = exports.PropertiesHandler = exports.PreloadHandler = exports.PredicatesHandler = exports.PredicateHandler = exports.PathProxy = exports.PathFactory = exports.PathExpressionHandler = exports.MutationFunctionHandler = exports.MutationExpressionsHandler = exports.JSONLDResolver = exports.InsertFunctionHandler = exports.ExecuteQueryHandler = exports.DeleteFunctionHandler = exports.DataHandler = exports.AsyncIteratorHandler = void 0;
 const AsyncIteratorHandler_1 = __importDefault(require("./AsyncIteratorHandler"));
 exports.AsyncIteratorHandler = AsyncIteratorHandler_1.default;
 const DataHandler_1 = __importDefault(require("./DataHandler"));
@@ -52,8 +52,7 @@ const SortHandler_1 = __importDefault(require("./SortHandler"));
 exports.SortHandler = SortHandler_1.default;
 const SparqlHandler_1 = __importDefault(require("./SparqlHandler"));
 exports.SparqlHandler = SparqlHandler_1.default;
-const StoresFactory_1 = __importDefault(require("./StoresFactory"));
-exports.StoresFactory = StoresFactory_1.default;
+// import StoresFactory from './StoresFactory'
 const StringToLDflexHandler_1 = __importDefault(require("./StringToLDflexHandler"));
 exports.StringToLDflexHandler = StringToLDflexHandler_1.default;
 const SubjectHandler_1 = __importDefault(require("./SubjectHandler"));
