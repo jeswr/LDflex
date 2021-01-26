@@ -56,6 +56,7 @@
     "jest": "jest",
     "lint": "eslint src test --fix",
     "prepublishOnly": "npm run build",
+    "prepare": "npm run build",
     "test": "tsc && npm run jest -- --collectCoverage",
     "test:dev": "npm run jest -- --watch"
   }
